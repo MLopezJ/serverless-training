@@ -24,7 +24,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
 
     // =====================================================================================
-    // Thumnail Bucket
+    // Thumbnail Bucket
     // =====================================================================================
     const resizedBucket = new s3.Bucket(this, resizedBucketId, {
       removalPolicy: cdk.RemovalPolicy.DESTROY
