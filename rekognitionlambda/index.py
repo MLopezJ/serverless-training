@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 
 # Set the minimum confidence for Amazon Rekognition
 
-minConfidence = 80
+minConfidence = 50
 
 """MinConfidence parameter (float) -- Specifies the minimum confidence level for the labels to return. 
 Amazon Rekognition doesn't return any labels with a confidence lower than this specified value. 
