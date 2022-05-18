@@ -8,6 +8,7 @@ import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
+const resizedBucketId = imageBucketResourceId + "-resized"
 
 
 export class AwsServerlessTrainingStack extends cdk.Stack  {
@@ -21,6 +22,14 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
+
+    // =====================================================================================
+    // Thumnail Bucket
+    // =====================================================================================
+    const resizedBucket = new s3.Bucket(this, resizedBucketId, {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+    new cdk.CfnOutput(this, 'resizedBucket', { value: resizedBucket.bucketName });
 
     // =====================================================================================
     // Amazon DynamoDB table for storing image labels
