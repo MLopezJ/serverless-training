@@ -6,7 +6,8 @@ import lambda = require('@aws-cdk/aws-lambda');
 import iam = require('@aws-cdk/aws-iam');
 import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 
-const imageBucketName = "cdk-serverlesstraining-imgbucket"
+// This is the CDK internal resource ID, not the S3 bucket name!
+const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
 
 
 export class AwsServerlessTrainingStack extends cdk.Stack  {
@@ -16,7 +17,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // =====================================================================================
     // Image Bucket
     // =====================================================================================
-    const imageBucket = new s3.Bucket(this, imageBucketName, {
+    const imageBucket = new s3.Bucket(this, imageBucketResourceId, {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
