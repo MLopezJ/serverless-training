@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 import uuid
 from PIL import Image
 
-thumbBucket = os.environp['RESIZEDBUCKET']
+thumbBucket = os.environ['RESIZEDBUCKET']
 
 
 # Set the minimum confidence for Amazon Rekognition
