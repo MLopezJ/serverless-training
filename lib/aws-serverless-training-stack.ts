@@ -70,9 +70,9 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
 
     rekFn.addEventSource(new event_sources.S3EventSource(imageBucket, { events: [ s3.EventType.OBJECT_CREATED ]}));
     imageBucket.grantRead(rekFn);
-    table.grantWriteData(rekFn);
     resizedBucket.grantPut(rekFn);
-
+    table.grantWriteData(rekFn);
+    
     rekFn.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['rekognition:DetectLabels'],
