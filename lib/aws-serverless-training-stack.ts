@@ -64,7 +64,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       environment: {
           "TABLE": table.tableName,
           "BUCKET": imageBucket.bucketName,
-          "THUMBBUCKET": resizedBucket.bucketName
+          "RESIZEDBUCKET": resizedBucket.bucketName
       },
     });
 
