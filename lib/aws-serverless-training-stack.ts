@@ -178,6 +178,21 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       type: AuthorizationType.COGNITO,
     });
 
+    const authenticatedRole = new iam.Role(this, "ImageRekognitionAuthenticatedRole", {
+      assumedBy: new iam.FederatedPrincipal(
+        "cognito-identity.amazonaws.com",
+          {
+          StringEquals: {
+              "cognito-identity.amazonaws.com:aud": identityPool.ref,
+          },
+          "ForAnyValue:StringLike": {
+            "cognito-identity.amazonaws.com:amr": "authenticated",
+          },
+        },
+        "sts:AssumeRoleWithWebIdentity"
+      ),
+    });
+
     // =====================================================================================
     // API Gateway
     // =====================================================================================
