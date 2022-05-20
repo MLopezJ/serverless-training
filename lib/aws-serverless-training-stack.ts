@@ -147,6 +147,30 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     });
 
     // =====================================================================================
+    // Cognito User Pool Authentication
+    // =====================================================================================
+    const userPool = new cognito.UserPool(this, "UserPool", {
+      selfSignUpEnabled: true, // Allow users to sign up
+      autoVerify: { email: true }, // Verify email addresses by sending a verification code
+      signInAliases: { username: true, email: true }, // Set email as an alias
+    });
+
+    const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
+      userPool,
+      generateSecret: false, // Don't need to generate secret for web app running on browsers
+    });
+
+    const identityPool = new cognito.CfnIdentityPool(this, "ImageRekognitionIdentityPool", {
+      allowUnauthenticatedIdentities: false, // Don't allow unathenticated users
+      cognitoIdentityProviders: [
+        {
+        clientId: userPoolClient.userPoolClientId,
+        providerName: userPool.userPoolProviderName,
+        },
+      ],
+    });
+
+    // =====================================================================================
     // API Gateway
     // =====================================================================================
     const imageAPI = api.root.addResource('images');
