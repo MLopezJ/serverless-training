@@ -248,6 +248,8 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     ​
     // GET /images
     imageAPI.addMethod('GET', lambdaIntegration, {
+      authorizationType: AuthorizationType.COGNITO,
+      authorizer: { authorizerId: auth.ref },
       requestParameters: {
         'method.request.querystring.action': true,
         'method.request.querystring.key': true
@@ -270,6 +272,8 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     
     // DELETE /images
     imageAPI.addMethod('DELETE', lambdaIntegration, {
+      authorizationType: AuthorizationType.COGNITO,
+      authorizer: { authorizerId: auth.ref },
       requestParameters: {
         'method.request.querystring.action': true,
         'method.request.querystring.key': true
