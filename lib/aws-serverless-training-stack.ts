@@ -170,6 +170,14 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       ],
     });
 
+    const auth = new apigw.CfnAuthorizer(this, 'APIGatewayAuthorizer', {
+      name: 'customer-authorizer',
+      identitySource: 'method.request.header.Authorization',
+      providerArns: [userPool.userPoolArn],
+      restApiId: api.restApiId,
+      type: AuthorizationType.COGNITO,
+    });
+
     // =====================================================================================
     // API Gateway
     // =====================================================================================
