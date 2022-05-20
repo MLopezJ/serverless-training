@@ -5,6 +5,7 @@ import dynamodb = require('@aws-cdk/aws-dynamodb');
 import lambda = require('@aws-cdk/aws-lambda');
 import iam = require('@aws-cdk/aws-iam');
 import event_sources = require('@aws-cdk/aws-lambda-event-sources');
+import apigw = require('@aws-cdk/aws-apigateway');
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
@@ -98,6 +99,15 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     imageBucket.grantWrite(serviceFn);
     resizedBucket.grantWrite(serviceFn);
     table.grantReadWriteData(serviceFn);
+
+    const api = new apigw.LambdaRestApi(this, 'imageAPI', {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigw.Cors.ALL_ORIGINS,
+        allowMethods: apigw.Cors.ALL_METHODS
+      },
+      handler: serviceFn,
+      proxy: false,
+    });
 
   }
 }
