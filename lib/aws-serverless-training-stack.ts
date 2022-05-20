@@ -195,6 +195,36 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       ),
     });
 
+     // IAM policy granting users permission to upload, download and delete their own pictures
+     authenticatedRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: [
+          "s3:GetObject",
+          "s3:PutObject"
+        ],
+        effect: iam.Effect.ALLOW,
+        resources: [
+          imageBucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
+          imageBucketArn + "/private/${cognito-identity.amazonaws.com:sub}",
+          resizedBucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
+          resizedBucketArn + "/private/${cognito-identity.amazonaws.com:sub}"
+        ],
+      })
+    );
+
+    // IAM policy granting users permission to list their pictures
+    authenticatedRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:ListBucket"],
+        effect: iam.Effect.ALLOW,
+        resources: [
+          imageBucketArn,
+          resizedBucketArn
+        ],
+        conditions: {"StringLike": {"s3:prefix": ["private/${cognito-identity.amazonaws.com:sub}/*"]}}
+      })
+    );
+
     // =====================================================================================
     // API Gateway
     // =====================================================================================
