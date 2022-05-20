@@ -225,6 +225,11 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       })
     );
 
+    new cognito.CfnIdentityPoolRoleAttachment(this, "IdentityPoolRoleAttachment", {
+      identityPoolId: identityPool.ref,
+      roles: { authenticated: authenticatedRole.roleArn },
+    });
+
     // =====================================================================================
     // API Gateway
     // =====================================================================================
