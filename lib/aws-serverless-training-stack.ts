@@ -9,6 +9,8 @@ import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import apigw = require('@aws-cdk/aws-apigateway');
 import { AuthorizationType, PassthroughBehavior } from '@aws-cdk/aws-apigateway';
 import cognito = require('@aws-cdk/aws-cognito');
+import s3deploy = require('@aws-cdk/aws-s3-deployment');
+import { HttpMethods } from '@aws-cdk/aws-s3';
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
