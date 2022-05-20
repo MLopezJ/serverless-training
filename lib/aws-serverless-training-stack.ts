@@ -26,6 +26,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
+    const imageBucketArn = imageBucket.bucketArn;
 
     // =====================================================================================
     // Thumbnail Bucket
@@ -34,6 +35,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     new cdk.CfnOutput(this, 'resizedBucket', { value: resizedBucket.bucketName });
+    const resizedBucketArn = resizedBucket.bucketArn;
 
     // =====================================================================================
     // Amazon DynamoDB table for storing image labels
