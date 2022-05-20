@@ -1,12 +1,14 @@
 import * as cdk from '@aws-cdk/core';
 import { Duration } from '@aws-cdk/core';
+import { CfnOutput } from "@aws-cdk/core";
 import s3 = require('@aws-cdk/aws-s3');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import lambda = require('@aws-cdk/aws-lambda');
 import iam = require('@aws-cdk/aws-iam');
 import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import apigw = require('@aws-cdk/aws-apigateway');
-import { PassthroughBehavior } from '@aws-cdk/aws-apigateway';
+import { AuthorizationType, PassthroughBehavior } from '@aws-cdk/aws-apigateway';
+import cognito = require('@aws-cdk/aws-cognito');
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
