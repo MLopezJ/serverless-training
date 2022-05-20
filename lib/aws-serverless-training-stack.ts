@@ -30,6 +30,12 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     });
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
     const imageBucketArn = imageBucket.bucketArn;
+    imageBucket.addCorsRule({
+      allowedMethods: [HttpMethods.GET, HttpMethods.PUT],
+      allowedOrigins: ["*"],
+      allowedHeaders: ["*"],
+      maxAge: 3000
+    });
 
     // =====================================================================================
     // Thumbnail Bucket
@@ -39,6 +45,12 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     });
     new cdk.CfnOutput(this, 'resizedBucket', { value: resizedBucket.bucketName });
     const resizedBucketArn = resizedBucket.bucketArn;
+    resizedBucket.addCorsRule({
+      allowedMethods: [HttpMethods.GET, HttpMethods.PUT],
+      allowedOrigins: ["*"],
+      allowedHeaders: ["*"],
+      maxAge: 3000
+    });
 
     // =====================================================================================
     // Construct to create our Amazon S3 Bucket to host our website
@@ -56,13 +68,22 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       conditions: {
         'IpAddress': {
           'aws:SourceIp': [
-            '194.19.86.146/16b' // Please change it to your IP address or from your allowed list
+            '194.19.86.146/16' // Please change it to your IP address or from your allowed list
             ]
         }
       }
       
     }))
     new cdk.CfnOutput(this, 'bucketURL', { value: webBucket.bucketWebsiteDomainName });
+
+    // =====================================================================================
+    // Deploy site contents to S3 Bucket
+    // =====================================================================================
+    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
+      sources: [ s3deploy.Source.asset('./public') ],
+      destinationBucket: webBucket
+    });
+
 
     // =====================================================================================
     // Amazon DynamoDB table for storing image labels
