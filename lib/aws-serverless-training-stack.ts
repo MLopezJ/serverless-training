@@ -6,6 +6,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import iam = require('@aws-cdk/aws-iam');
 import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import apigw = require('@aws-cdk/aws-apigateway');
+import { PassthroughBehavior } from '@aws-cdk/aws-apigateway';
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
@@ -107,6 +108,40 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       },
       handler: serviceFn,
       proxy: false,
+    });
+
+     // =====================================================================================
+    // This construct builds a new Amazon API Gateway with AWS Lambda Integration
+    // =====================================================================================
+    const lambdaIntegration = new apigw.LambdaIntegration(serviceFn, {
+      proxy: false,
+      requestParameters: {
+        'integration.request.querystring.action': 'method.request.querystring.action',
+        'integration.request.querystring.key': 'method.request.querystring.key'
+      },
+      requestTemplates: {
+        'application/json': JSON.stringify({ action: "$util.escapeJavaScript($input.params('action'))", key: "$util.escapeJavaScript($input.params('key'))" })
+      },
+      passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
+      integrationResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            // We can map response parameters
+            // - Destination parameters (the key) are the response parameters (used in mappings)
+            // - Source parameters (the value) are the integration response parameters or expressions
+            'method.response.header.Access-Control-Allow-Origin': "'*'"
+          }
+        },
+        {
+          // For errors, we check if the error message is not empty, get the error data
+          selectionPattern: "(\n|.)+",
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': "'*'"
+          }
+        }
+      ],
     });
 
   }
