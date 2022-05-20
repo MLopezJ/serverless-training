@@ -230,6 +230,17 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       roles: { authenticated: authenticatedRole.roleArn },
     });
 
+    // Export values of Cognito
+    new CfnOutput(this, "UserPoolId", {
+      value: userPool.userPoolId,
+    });
+    new CfnOutput(this, "AppClientId", {
+      value: userPoolClient.userPoolClientId,
+    });
+    new CfnOutput(this, "IdentityPoolId", {
+      value: identityPool.ref,
+    });
+
     // =====================================================================================
     // API Gateway
     // =====================================================================================
