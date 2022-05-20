@@ -110,7 +110,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       proxy: false,
     });
 
-     // =====================================================================================
+    // =====================================================================================
     // This construct builds a new Amazon API Gateway with AWS Lambda Integration
     // =====================================================================================
     const lambdaIntegration = new apigw.LambdaIntegration(serviceFn, {
@@ -142,6 +142,55 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
           }
         }
       ],
+    });
+
+    // =====================================================================================
+    // API Gateway
+    // =====================================================================================
+    const imageAPI = api.root.addResource('images');
+    ​
+    // GET /images
+    imageAPI.addMethod('GET', lambdaIntegration, {
+      requestParameters: {
+        'method.request.querystring.action': true,
+        'method.request.querystring.key': true
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        },
+        {
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        }
+      ]
+    });
+    
+    // DELETE /images
+    imageAPI.addMethod('DELETE', lambdaIntegration, {
+      requestParameters: {
+        'method.request.querystring.action': true,
+        'method.request.querystring.key': true
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        },
+        {
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        }
+      ]
     });
 
   }
