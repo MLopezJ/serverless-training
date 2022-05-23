@@ -347,5 +347,22 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       ]
     });
 
+    // =====================================================================================
+    // Building SQS queue and DeadLetter Queue
+    // =====================================================================================
+    const dlQueue = new sqs.Queue(this, 'ImageDLQueue', {
+      queueName: 'ImageDLQueue'
+    })
+    ​
+    const queue = new sqs.Queue(this, 'ImageQueue', {
+      queueName: 'ImageQueue',
+      visibilityTimeout: cdk.Duration.seconds(30),
+      receiveMessageWaitTime: cdk.Duration.seconds(20),
+      deadLetterQueue: {
+        maxReceiveCount: 2,
+        queue: dlQueue
+      }
+    });
+
   }
 }
