@@ -55,33 +55,36 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // =====================================================================================
     // Construct to create our Amazon S3 Bucket to host our website
     // =====================================================================================
-    const webBucket = new s3.Bucket(this, websiteBucketName, {
+    const uiBucket = new s3.Bucket(this, websiteBucketName, {
       websiteIndexDocument: 'index.html',
-      removalPolicy: cdk.RemovalPolicy.DESTROY
-      // publicReadAccess: true,
+      websiteErrorDocument: 'index.html',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      publicReadAccess: true, // comment if want to make it private
     });
     
-    webBucket.addToResourcePolicy(new iam.PolicyStatement({
+    // Uncomment this  and add custom IP address to make it privates
+    /*
+    uiBucket.addToResourcePolicy(new iam.PolicyStatement({
       actions: ['s3:GetObject'],
-      resources: [webBucket.arnForObjects('*')],
+      resources: [uiBucket.arnForObjects('*')],
       principals: [new iam.AnyPrincipal()],
       conditions: {
         'IpAddress': {
-          'aws:SourceIp': [
+          'aws:SourceIp': [ 
             '194.19.86.146/16' // Please change it to your IP address or from your allowed list
             ]
         }
       }
-      
     }))
-    new cdk.CfnOutput(this, 'bucketURL', { value: webBucket.bucketWebsiteDomainName });
+    */
+    new cdk.CfnOutput(this, 'bucketURL', { value: uiBucket.bucketWebsiteDomainName });
 
     // =====================================================================================
     // Deploy site contents to S3 Bucket
     // =====================================================================================
     new s3deploy.BucketDeployment(this, 'DeployWebsite', {
       sources: [ s3deploy.Source.asset('./public') ],
-      destinationBucket: webBucket
+      destinationBucket: uiBucket
     });
 
 
