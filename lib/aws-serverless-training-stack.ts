@@ -127,7 +127,8 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       },
     });
 
-    rekFn.addEventSource(new event_sources.S3EventSource(imageBucket, { events: [ s3.EventType.OBJECT_CREATED ]}));
+    // remove bucket creationn because labda is triggered now by the sqs queu
+    // rekFn.addEventSource(new event_sources.S3EventSource(imageBucket, { events: [ s3.EventType.OBJECT_CREATED ]}));
     imageBucket.grantRead(rekFn);
     resizedBucket.grantPut(rekFn);
     table.grantWriteData(rekFn);
@@ -363,6 +364,16 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
         queue: dlQueue
       }
     });
+
+    // =====================================================================================
+    // Building S3 Bucket Create Notification to SQS
+    // =====================================================================================
+    imageBucket.addObjectCreatedNotification(new s3n.SqsDestination(queue), { prefix: 'private/' })
+  
+    // =====================================================================================
+    // Lambda(Rekognition) to consume messages from SQS
+    // =====================================================================================
+    rekFn.addEventSource(new event_sources.SqsEventSource(queue));
 
   }
 }
