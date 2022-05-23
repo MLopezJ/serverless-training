@@ -1,7 +1,0 @@
-DevhourSeries1Stack.Bucket = awsserverlesstrainingsta-cdkserverlesstrainingimg-d4e4rhz6q1xj
-DevhourSeries1Stack.BucketURL = awsserverlesstrainingsta-cdkreknpublicbucket22d34-1mkauadudpcbu.s3-website-eu-west-1.amazonaws.com
-DevhourSeries1Stack.IdentityPoolId = eu-west-1:58ebbb38-9f0b-4eaa-b983-c5351d0c9a54
-DevhourSeries1Stack.Table = AwsServerlessTrainingStack-ImageLabelsE524135D-1RV5N9435WQUM
-DevhourSeries1Stack.UserPoolClientId = lq48jium2l66fc1i642cej7v7
-DevhourSeries1Stack.UserPoolId = eu-west-1_Pz4tfKfEU
-DevhourSeries1Stack.imageAPIEndpointD64DB231 = https://0yjuj5axr2.execute-api.eu-west-1.amazonaws.com/prod/
