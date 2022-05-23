@@ -1,0 +1,15 @@
+ {
+  "api": {
+    "invokeUrl": "https://0yjuj5axr2.execute-api.eu-west-1.amazonaws.com/prod/"
+  },
+  "cognito": {
+    "REGION": "eu-west-1",
+    "USER_POOL_ID": "eu-west-1_Pz4tfKfEU",
+    "APP_CLIENT_ID": "lq48jium2l66fc1i642cej7v7",
+    "IDENTITY_POOL_ID": "eu-west-1:58ebbb38-9f0b-4eaa-b983-c5351d0c9a54"
+  },
+  "s3": {
+    "bucket": "awsserverlesstrainingsta-cdkserverlesstrainingimg-d4e4rhz6q1xj",
+    "thumbBucket": "awsserverlesstrainingsta-cdkserverlesstrainingimg-nom7d4qitvji"
+  }
+}
