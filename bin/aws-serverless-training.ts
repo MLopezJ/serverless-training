@@ -4,7 +4,6 @@ import * as cdk from '@aws-cdk/core';
 import { AwsServerlessTrainingStack } from '../lib/aws-serverless-training-stack';
 import { AwsServerlessTrainingPipelineStack } from '../lib/aws-serverless-training-pipeline-stack';
 
-
 const app = new cdk.App();
 new AwsServerlessTrainingStack(app, 'AwsServerlessTrainingStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
