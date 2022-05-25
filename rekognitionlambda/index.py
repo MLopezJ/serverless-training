@@ -44,10 +44,11 @@ def handler(event, context):
             ourKey = record['s3']['object']['key']
 
         # For each bucket/key, retrieve labels
+        generateThumb(ourBucket, ourKey)
         rekFunction(ourBucket, ourKey)
 
     return
-'''
+
 def generateThumb(ourBucket, ourKey):
 
     # Clean the string to add the colon back into requested name
@@ -83,7 +84,7 @@ def resize_image(image_path, resized_path):
     with Image.open(image_path) as image:
         image.thumbnail(tuple(x / 2 for x in image.size))
         image.save(resized_path)
-'''
+
 
 
 def rekFunction(ourBucket, ourKey):
@@ -93,6 +94,9 @@ def rekFunction(ourBucket, ourKey):
     
     print('Currently processing the following image')
     print('Bucket: ' + ourBucket + ' key name: ' + safeKey)
+
+    detectLabelsResults = {}
+
 
     # Try and retrieve labels from Amazon Rekognition, using the confidence level we set in minConfidence var
     try:
