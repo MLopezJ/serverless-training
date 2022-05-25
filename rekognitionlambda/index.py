@@ -47,7 +47,7 @@ def handler(event, context):
         rekFunction(ourBucket, ourKey)
 
     return
-
+'''
 def generateThumb(ourBucket, ourKey):
 
     # Clean the string to add the colon back into requested name
@@ -83,6 +83,7 @@ def resize_image(image_path, resized_path):
     with Image.open(image_path) as image:
         image.thumbnail(tuple(x / 2 for x in image.size))
         image.save(resized_path)
+'''
 
 
 def rekFunction(ourBucket, ourKey):
