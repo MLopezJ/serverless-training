@@ -58,7 +58,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         synthCommand: 'npm run cdk synth'
       })
     });
-    
+     
     //Define application stage
     const devStage = pipeline.addApplicationStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
 
