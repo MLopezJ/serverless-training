@@ -12,32 +12,15 @@
     "outputs": "aws cloudformation describe-stacks --stack-name dev-AwsServerlessTrainingPipelineStack | jq '.Stacks | .[] | .Outputs | reduce .[] as $i ({}; .[$i.OutputKey] = $i.OutputValue)'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.156.1",
     "@types/jest": "27.5.0",
     "@types/node": "10.17.27",
     "@types/prettier": "2.6.0",
-    "aws-cdk": "1.156.1",
     "jest": "27.5.1",
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "1.156.1",
-    "@aws-cdk/aws-codepipeline": "1.156.1",
-    "@aws-cdk/aws-codepipeline-actions": "1.156.1",
-    "@aws-cdk/aws-cognito": "1.156.1",
-    "@aws-cdk/aws-dynamodb": "1.156.1",
-    "@aws-cdk/aws-iam": "1.156.1",
-    "@aws-cdk/aws-lambda": "1.156.1",
-    "@aws-cdk/aws-lambda-event-sources": "1.156.1",
-    "@aws-cdk/aws-s3": "1.156.1",
-    "@aws-cdk/aws-s3-deployment": "1.156.1",
-    "@aws-cdk/aws-s3-notifications": "1.156.1",
-    "@aws-cdk/aws-sqs": "1.156.1",
-    "@aws-cdk/aws-ssm": "^1.156.1",
-    "@aws-cdk/core": "1.156.1",
-    "@aws-cdk/pipelines": "1.156.1",
     "source-map-support": "0.5.21"
   }
 }
