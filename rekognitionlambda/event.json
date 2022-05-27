@@ -2,7 +2,7 @@
     "Records": [{
 		"s3": {
 			"bucket": {
-				"name": "awsserverlesstrainingsta-cdkserverlesstrainingimg-d4e4rhz6q1xj"
+				"name": "dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3"
 			},
 			"object": {
 				"key": "image.jpg"
