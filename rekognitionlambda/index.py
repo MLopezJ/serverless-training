@@ -14,8 +14,8 @@ import json
 
 thumbBucket = os.environ['RESIZEDBUCKET']
 
-
 # Set the minimum confidence for Amazon Rekognition
+
 minConfidence = 50
 
 """MinConfidence parameter (float) -- Specifies the minimum confidence level for the labels to return. 
@@ -85,8 +85,6 @@ def resize_image(image_path, resized_path):
         image.thumbnail(tuple(x / 2 for x in image.size))
         image.save(resized_path)
 
-
-
 def rekFunction(ourBucket, ourKey):
     
     # Clean the string to add the colon back into requested name which was substitued by Amplify Library.
@@ -96,7 +94,6 @@ def rekFunction(ourBucket, ourKey):
     print('Bucket: ' + ourBucket + ' key name: ' + safeKey)
 
     detectLabelsResults = {}
-
 
     # Try and retrieve labels from Amazon Rekognition, using the confidence level we set in minConfidence var
     try:
