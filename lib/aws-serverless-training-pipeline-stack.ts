@@ -1,11 +1,12 @@
-import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
-import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
+// import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
+// import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs'; 
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { CdkPipeline,  SimpleSynthAction } from 'aws-cdk-lib/pipelines';
+import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
-import { ManualApprovalAction } from 'aws-cdk-lib/aws-codepipeline-actions';
+// import { ManualApprovalAction } from 'aws-cdk-lib/aws-codepipeline-actions';
+// import { Code } from 'aws-cdk-lib/aws-lambda';
 
 /**
  * Stack to define the awsserverless-training application pipeline
@@ -21,8 +22,10 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
   
+    /*
     const sourceArtifact = new codepipeline.Artifact();
     const cloudAssemblyArtifact = new codepipeline.Artifact();
+    */
   
     const githubOwner = StringParameter.fromStringParameterAttributes(this, 'gitOwner',{
       parameterName: 'serverless-training-git-owner'
@@ -35,8 +38,20 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const githubBranch = StringParameter.fromStringParameterAttributes(this, 'gitBranch',{
       parameterName: 'serverless-training-git-branch'
     }).stringValue;
-    
-    const pipeline = new CdkPipeline(this, 'Pipeline', {
+
+    const pipeline =  new CodePipeline(this, 'Pipeline', {
+      crossAccountKeys: false,
+      pipelineName: 'MyPipeline',
+      synth: new ShellStep('Synth', {
+        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', githubBranch, {
+          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
+        }),
+        commands: ['npm ci', 'npm run build', 'npm run cdk synth']  // npx cdk synth
+      })
+    });
+  
+    /*
+    const ppln = new CdkPipeline(this, 'Pipeline', {
       crossAccountKeys: false,
       cloudAssemblyArtifact,
       // Define application source
@@ -59,9 +74,11 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         synthCommand: 'npm run cdk synth'
       })
     });
+    */
      
     //Define application stage
-    const devStage = pipeline.addApplicationStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
+    // pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
+    const devStage = pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
 
     // devStage.addActions(new ManualApprovalAction({
     //   actionName: 'ManualApproval',
