@@ -1,6 +1,5 @@
-import * as cdk from 'aws-cdk-lib/core';
-import { Duration } from 'aws-cdk-lib/core';
-import { CfnOutput } from "aws-cdk-lib/core";
+import * as cdk from 'aws-cdk-lib';
+import { Duration, CfnOutput } from 'aws-cdk-lib';
 import s3 = require('aws-cdk-lib/aws-s3');
 import dynamodb = require('aws-cdk-lib/aws-dynamodb');
 import lambda = require('aws-cdk-lib/aws-lambda');
