@@ -1,18 +1,19 @@
-import * as cdk from '@aws-cdk/core';
-import { Duration } from '@aws-cdk/core';
-import { CfnOutput } from "@aws-cdk/core";
-import s3 = require('@aws-cdk/aws-s3');
-import dynamodb = require('@aws-cdk/aws-dynamodb');
-import lambda = require('@aws-cdk/aws-lambda');
-import iam = require('@aws-cdk/aws-iam');
-import event_sources = require('@aws-cdk/aws-lambda-event-sources');
-import apigw = require('@aws-cdk/aws-apigateway');
-import { AuthorizationType, PassthroughBehavior } from '@aws-cdk/aws-apigateway';
-import cognito = require('@aws-cdk/aws-cognito');
-import s3deploy = require('@aws-cdk/aws-s3-deployment');
-import { HttpMethods } from '@aws-cdk/aws-s3';
-import sqs = require('@aws-cdk/aws-sqs');
-import s3n = require('@aws-cdk/aws-s3-notifications');
+import * as cdk from 'aws-cdk-lib/core';
+import { Duration } from 'aws-cdk-lib/core';
+import { CfnOutput } from "aws-cdk-lib/core";
+import s3 = require('aws-cdk-lib/aws-s3');
+import dynamodb = require('aws-cdk-lib/aws-dynamodb');
+import lambda = require('aws-cdk-lib/aws-lambda');
+import iam = require('aws-cdk-lib/aws-iam');
+import event_sources = require('aws-cdk-lib/aws-lambda-event-sources');
+import apigw = require('aws-cdk-lib/aws-apigateway');
+import { AuthorizationType, PassthroughBehavior } from 'aws-cdk-lib/aws-apigateway';
+import cognito = require('aws-cdk-lib/aws-cognito');
+import s3deploy = require('aws-cdk-lib/aws-s3-deployment');
+import { HttpMethods } from 'aws-cdk-lib/aws-s3';
+import sqs = require('aws-cdk-lib/aws-sqs');
+import s3n = require('aws-cdk-lib/aws-s3-notifications');
+import { Construct } from 'constructs'; 
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
@@ -21,7 +22,7 @@ const websiteBucketName = "cdk-rekn-publicbucket"
 
 
 export class AwsServerlessTrainingStack extends cdk.Stack  {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // =====================================================================================

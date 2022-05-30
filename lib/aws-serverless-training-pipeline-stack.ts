@@ -1,10 +1,11 @@
-import * as codepipeline from '@aws-cdk/aws-codepipeline';
-import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
-import { Construct, SecretValue, Stack, StackProps } from '@aws-cdk/core';
-import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
+import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
+import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
+import { Construct } from 'constructs'; 
+import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
+import { CdkPipeline,  SimpleSynthAction } from 'aws-cdk-lib/pipelines';
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
-import { StringParameter } from '@aws-cdk/aws-ssm';
-import { ManualApprovalAction } from '@aws-cdk/aws-codepipeline-actions';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { ManualApprovalAction } from 'aws-cdk-lib/aws-codepipeline-actions';
 
 /**
  * Stack to define the awsserverless-training application pipeline

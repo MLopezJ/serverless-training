@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
-import * as cdk from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib';
 import { AwsServerlessTrainingStack } from '../lib/aws-serverless-training-stack';
 import { AwsServerlessTrainingPipelineStack } from '../lib/aws-serverless-training-pipeline-stack';
 
