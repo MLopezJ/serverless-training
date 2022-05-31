@@ -21,6 +21,8 @@ import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    // sourceArtifact
   
     /*
     const sourceArtifact = new codepipeline.Artifact();
