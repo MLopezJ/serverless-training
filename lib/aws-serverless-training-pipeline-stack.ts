@@ -66,7 +66,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       })
     });
 
-    pipeline.buildPipeline()
+    //pipeline.buildPipeline()
 
     //pipeline.addStage()
     
