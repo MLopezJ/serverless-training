@@ -57,6 +57,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         }),
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
         commands: [
+          'npm install',
           'npm ci',
           'npx cdk deploy "*"',
                   ]
