@@ -30,6 +30,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     */
   
     /*
+
+    // comment those just for testing proposals
+    
     const githubOwner = StringParameter.valueFromLookup(this, 'serverless-training-git-owner');
 
     const githubRepo = StringParameter.valueFromLookup(this, 'serverless-training-git-repo');
@@ -60,7 +63,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         commands: [
           'pwd'
           // 'npm install',
-          // 'npm ci',
+          // 'npm ci',  // comment those lines just for testing proposals
           // 'npx cdk deploy "*"',
                   ]
       })
