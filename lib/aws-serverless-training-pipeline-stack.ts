@@ -45,7 +45,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
     */
-   
+
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       selfMutation: false,
@@ -58,9 +58,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         }),
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
         commands: [
-          'npm install',
-          'npm ci',
-          'npx cdk deploy "*"',
+          // 'npm install',
+          // 'npm ci',
+          // 'npx cdk deploy "*"',
                   ]
       })
     });
