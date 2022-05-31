@@ -29,6 +29,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const cloudAssemblyArtifact = new codepipeline.Artifact();
     */
   
+    /*
     const githubOwner = StringParameter.valueFromLookup(this, 'serverless-training-git-owner');
 
     const githubRepo = StringParameter.valueFromLookup(this, 'serverless-training-git-repo');
@@ -38,6 +39,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const source = CodePipelineSource.gitHub(`${githubOwner}/${githubRepo}`, githubBranch, {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
+    /*
 
     /* CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
@@ -50,7 +52,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       pipelineName: 'MyPipeline',
       
       synth: new ShellStep('Synth', {
-        input: source,
+        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
+          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
+        }),
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
         commands: [
           'npm ci',
