@@ -41,20 +41,24 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       parameterName: 'serverless-training-git-branch'
     }).stringValue;
 
+    const source = CodePipelineSource.gitHub('MLopezJ/serverless-training', githubBranch, {
+      authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
+    })
+
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       selfMutation: false,
       crossAccountKeys: false,
       pipelineName: 'MyPipeline',
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', githubBranch, {
-          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
-        }),
+        input: source,
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
         commands: ['npm ci',
                    'npm run build',
                    'npx cdk synth']
       })
     });
+
+    
   
     /*
     const ppln = new CdkPipeline(this, 'Pipeline', {
