@@ -50,7 +50,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       crossAccountKeys: false,
       pipelineName: 'MyPipeline',
       synth: new ShellStep('Synth', {
-        input: source,
+        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', githubBranch, {
+          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
+        }),
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
         commands: ['npm ci',
                    'npm run build',
