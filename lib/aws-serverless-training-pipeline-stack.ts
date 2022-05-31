@@ -29,37 +29,37 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const cloudAssemblyArtifact = new codepipeline.Artifact();
     */
   
-    const githubOwner = StringParameter.fromStringParameterAttributes(this, 'gitOwner',{
-      parameterName: 'serverless-training-git-owner'
-    }).stringValue;
-  
-    const githubRepo = StringParameter.fromStringParameterAttributes(this, 'gitRepo',{
-      parameterName: 'serverless-training-git-repo'
-    }).stringValue;
-  
-    const githubBranch = StringParameter.fromStringParameterAttributes(this, 'gitBranch',{
-      parameterName: 'serverless-training-git-branch'
-    }).stringValue;
+    const githubOwner = StringParameter.valueFromLookup(this, 'serverless-training-git-owner');
 
-    const source = CodePipelineSource.gitHub('MLopezJ/serverless-training', githubBranch, {
+    const githubRepo = StringParameter.valueFromLookup(this, 'serverless-training-git-repo');
+  
+    const githubBranch = StringParameter.valueFromLookup(this,  'serverless-training-git-branch');
+
+    const source = CodePipelineSource.gitHub(`${githubOwner}/${githubRepo}`, githubBranch, {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
+
+    /* CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
+      authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
+    })
+    */
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       selfMutation: false,
       crossAccountKeys: false,
       pipelineName: 'MyPipeline',
+      
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
-          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
-        }),
+        input: source,
         // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
-        commands: ['npm ci',
-                   'npm run build',
-                   'npx cdk synth']
+        commands: [
+          'npm ci',
+          'npx cdk deploy "*"',
+                  ]
       })
     });
 
+    //pipeline.addStage()
     
   
     /*

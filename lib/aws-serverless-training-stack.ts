@@ -352,11 +352,11 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // Building SQS queue and DeadLetter Queue
     // =====================================================================================
     const dlQueue = new sqs.Queue(this, 'ImageDLQueue', {
-      queueName: 'ImageDLQueue'
+      // is noy a good practice to give it a name for scalability reason 
+      
     })
     ​
     const queue = new sqs.Queue(this, 'ImageQueue', {
-      queueName: 'ImageQueue',
       visibilityTimeout: cdk.Duration.seconds(30),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
