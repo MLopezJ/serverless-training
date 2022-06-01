@@ -31,8 +31,6 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     })
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
-      // selfMutation: false,
-      // crossAccountKeys: false,
       pipelineName: 'MyPipeline',
       synth: new ShellStep('SynthStep', {
         input: source,
