@@ -35,11 +35,11 @@ new AwsServerlessTrainingPipelineStack(app, 'AwsServerlessTrainingPipelineStack'
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
-  /*
+
   // comment those just for testing proposals
 env: {
   account: process.env.AWS_ACCOUNT_ID,
   region: process.env.AWS_DEFAULT_REGION
 }
-*/
+
 });
