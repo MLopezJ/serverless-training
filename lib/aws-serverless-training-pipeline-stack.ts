@@ -2,6 +2,7 @@ import { Construct } from 'constructs';
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 /**
  * Stack to define the awsserverless-training application pipeline
@@ -16,8 +17,6 @@ import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pi
 export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-  
-    /*
 
     // comment those just for testing proposals
     
@@ -30,23 +29,19 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const source = CodePipelineSource.gitHub(`${githubOwner}/${githubRepo}`, githubBranch, {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
-    /*
+    
 
     /* CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
     */
 
-
-
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       // selfMutation: false,
       // crossAccountKeys: false,
       pipelineName: 'MyPipeline',
       synth: new ShellStep('SynthStep', {
-        input: CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
-          authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
-        }),
+        input: source,
         installCommands: [
           'npm install -g aws-cdk'
       ],
