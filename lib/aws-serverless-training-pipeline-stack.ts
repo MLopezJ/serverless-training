@@ -16,13 +16,6 @@ import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pi
 export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
-    // sourceArtifact
-  
-    /*
-    const sourceArtifact = new codepipeline.Artifact();
-    const cloudAssemblyArtifact = new codepipeline.Artifact();
-    */
   
     /*
 
@@ -65,40 +58,6 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       })
     });
 
-    
-    //pipeline.buildPipeline()
-
-    //pipeline.addStage()
-    
-  
-    /*
-    const ppln = new CdkPipeline(this, 'Pipeline', {
-      crossAccountKeys: false,
-      cloudAssemblyArtifact,
-      // Define application source
-      sourceAction: new codepipeline_actions.GitHubSourceAction({
-        actionName: 'GitHub',
-        output: sourceArtifact,
-        oauthToken: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'}), // this token is stored in Secret Manager
-        owner: githubOwner,
-        repo: githubRepo,
-        branch: githubBranch
-      }),
-      // Define build and synth commands
-      synthAction: SimpleSynthAction.standardNpmSynth({
-        sourceArtifact,
-        cloudAssemblyArtifact,
-        //This build command is to download pillow library, unzip the downloaded file and tidy up.
-        //If you already have pillow library downloaded under reklayer/, please just run 'npm run build'
-        // buildCommand: 'rm ./reklayer/pillow-goes-here.txt && wget https://awsdevhour.s3-accelerate.amazonaws.com/pillow.zip && unzip pillow.zip && mv ./python ./reklayer && rm pillow.zip && npm run build',
-        buildCommand: 'npm run build',
-        synthCommand: 'npm run cdk synth'
-      })
-    });
-    */
-     
-    //Define application stage
-    // pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
     const devStage = pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
 
     // devStage.addActions(new ManualApprovalAction({
