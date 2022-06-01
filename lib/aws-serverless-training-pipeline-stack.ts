@@ -2,7 +2,7 @@
 // import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs'; 
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import { CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 // import { ManualApprovalAction } from 'aws-cdk-lib/aws-codepipeline-actions';
@@ -51,21 +51,21 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
 
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
-      selfMutation: false,
-      crossAccountKeys: false,
+      // selfMutation: false,
+      // crossAccountKeys: false,
       pipelineName: 'MyPipeline',
-      
-      synth: new ShellStep('Synth', {
+      synth: new ShellStep('SynthStep', {
         input: CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
           authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
         }),
-        // commands: ['npm run build', 'npm run cdk synth']  // npx cdk synth // 'npm ci', 
-        commands: [
-          'pwd'
-          // 'npm install',
-          // 'npm ci',  // comment those lines just for testing proposals
-          // 'npx cdk deploy "*"',
-                  ]
+        installCommands: [
+          'npm install -g aws-cdk'
+      ],
+      commands: [
+          'npm ci',
+          'npm run build',
+          'npx cdk synth'
+      ]
       })
     });
 
