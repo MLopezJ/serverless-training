@@ -79,6 +79,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       }
     }))
     */
+   
     new cdk.CfnOutput(this, 'bucketURL', { value: uiBucket.bucketWebsiteDomainName });
 
     // =====================================================================================
