@@ -36,10 +36,5 @@ new AwsServerlessTrainingPipelineStack(app, 'AwsServerlessTrainingPipelineStack'
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
-  // comment those just for testing proposals
-env: {
-  account: process.env.AWS_ACCOUNT_ID,
-  region: process.env.AWS_DEFAULT_REGION
-}
 
 });
