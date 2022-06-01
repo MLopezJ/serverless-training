@@ -29,12 +29,6 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     const source = CodePipelineSource.gitHub(`${githubOwner}/${githubRepo}`, githubBranch, {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
-    
-
-    /* CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
-      authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
-    })
-    */
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       // selfMutation: false,
