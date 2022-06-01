@@ -1,5 +1,3 @@
-// import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
-// import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs'; 
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
