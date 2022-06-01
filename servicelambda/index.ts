@@ -5,6 +5,7 @@ import * as os from 'os';
 const dynamodb = AWS.resource('dynamodb')
 const s3 = AWS.resource('s3')
 
+
 exports.handler = (event: { [x: string]: any; }, context: any) => {
 
     // Detect requested action from the Amazon API Gateway Event
