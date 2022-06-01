@@ -2,11 +2,8 @@
 // import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs'; 
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep } from 'aws-cdk-lib/pipelines';
+import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
-// import { ManualApprovalAction } from 'aws-cdk-lib/aws-codepipeline-actions';
-// import { Code } from 'aws-cdk-lib/aws-lambda';
 
 /**
  * Stack to define the awsserverless-training application pipeline
@@ -48,7 +45,7 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
     */
-   
+
 
 
     const pipeline =  new CodePipeline(this, 'Pipeline', {
