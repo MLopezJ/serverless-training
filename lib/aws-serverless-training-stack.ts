@@ -167,6 +167,11 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'handler',
       entry: path.join(__dirname, `../servicelambda/index.ts`),
+      environment: {
+        "TABLE": table.tableName,
+        "BUCKET": imageBucket.bucketName,
+        "RESIZEDBUCKET": resizedBucket.bucketName
+      }
       /*
       bundling: {
         minify: true,
