@@ -19,7 +19,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         // requesting labels associate to image
         const result = await getLabels(key);
 
-        return !result ? 'No results' : result
+        return !result ? `No labels related to ${key}` : result
     }
 }
 
