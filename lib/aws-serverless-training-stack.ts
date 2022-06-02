@@ -13,7 +13,8 @@ import s3deploy = require('aws-cdk-lib/aws-s3-deployment');
 import { HttpMethods } from 'aws-cdk-lib/aws-s3';
 import sqs = require('aws-cdk-lib/aws-sqs');
 import s3n = require('aws-cdk-lib/aws-s3-notifications');
-import { Construct } from 'constructs'; 
+import { Construct } from 'constructs';
+import {NodejsFunction} from 'aws-cdk-lib/aws-lambda-nodejs'; 
 
 // This is the CDK internal resource ID, not the S3 bucket name!
 const imageBucketResourceId = "cdk-serverlesstraining-imgbucket"
@@ -144,6 +145,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // =====================================================================================
     // Lambda for Synchronous Front End
     // =====================================================================================
+    /*
   ​
     const serviceFn = new lambda.Function(this, 'serviceFunction', {
       //code: lambda.Code.fromAsset('servicelambda'),
@@ -156,6 +158,21 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
         "BUCKET": imageBucket.bucketName,
         "RESIZEDBUCKET": resizedBucket.bucketName
       },
+    });
+    */
+
+    const serviceFn = new NodejsFunction(this, 'serviceFunction', {
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(5),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      entry: path.join(__dirname, `/../servicelambda`),
+      /*
+      bundling: {
+        minify: true,
+        externalModules: ['aws-sdk'],
+      },
+      */
     });
     ​
     // define permisions

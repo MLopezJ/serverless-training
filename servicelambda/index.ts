@@ -18,6 +18,10 @@ export const handler = (event: { [x: string]: any; }, context: any) => {
         return(console.log('no info provided'))
     }
 
-    return(console.log(image, action))
+    console.log(image, action)
+    return {
+        body: JSON.stringify({message: 'Successful .ts lambda invocation'}),
+        statusCode: 200,
+      };
 
 }
