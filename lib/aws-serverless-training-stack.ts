@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import * as path from 'path';
 import { Duration, CfnOutput } from 'aws-cdk-lib';
 import s3 = require('aws-cdk-lib/aws-s3');
 import dynamodb = require('aws-cdk-lib/aws-dynamodb');
@@ -145,7 +146,8 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // =====================================================================================
   ​
     const serviceFn = new lambda.Function(this, 'serviceFunction', {
-      code: lambda.Code.fromAsset('servicelambda'),
+      //code: lambda.Code.fromAsset('servicelambda'),
+      code: lambda.Code.fromAsset(path.join(__dirname, '/servicelambda')),
       // runtime: lambda.Runtime.PYTHON_3_7,
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'index.handler',
