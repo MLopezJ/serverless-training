@@ -19,7 +19,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         // requesting labels associate to image
         const result = await getLabels(key);
 
-        return result
+        return !result ? 'No results' : result
     }
 }
 
@@ -30,6 +30,5 @@ const getLabels = async (key: any) => {
     }
 
     const data = await ddbClient.send(new GetItemCommand(param));
-    console.log("Success: ", data.Item);
-    return data;
+    return data && data.Item ? data.Item : undefined
 }
