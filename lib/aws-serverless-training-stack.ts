@@ -165,8 +165,8 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       memorySize: 1024,
       timeout: cdk.Duration.seconds(5),
       runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'index.handler',
-      entry: path.join(__dirname, `/../servicelambda`),
+      handler: 'handler',
+      entry: path.join(__dirname, `../servicelambda/index.ts`),
       /*
       bundling: {
         minify: true,
