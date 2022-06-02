@@ -34,11 +34,10 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
 
 const getLabels = async (info: any) => {
     const {key} = info
-    console.log('!!', process.env)
 
     const param = {
-        TableName: 'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF', // process.env.TABLE,
-        Key: { 'image': { S: key}} // KEY_NAME
+        TableName: process.env.TABLE,
+        Key: { 'image': { S: key}}
     }
 
     const data = await ddbClient.send(new GetItemCommand(param));
