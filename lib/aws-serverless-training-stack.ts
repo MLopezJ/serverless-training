@@ -147,7 +147,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
   ​
     const serviceFn = new lambda.Function(this, 'serviceFunction', {
       //code: lambda.Code.fromAsset('servicelambda'),
-      code: lambda.Code.fromAsset(path.join(__dirname, '/servicelambda')),
+      code: lambda.Code.fromAsset(path.join(__dirname, '../servicelambda')),
       // runtime: lambda.Runtime.PYTHON_3_7,
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'index.handler',
