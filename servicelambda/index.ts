@@ -8,7 +8,7 @@ const s3 = AWS.resource('s3')
 */
 
 
-export const handler = (event: { [x: string]: any; }, context: any) => {
+export const handler = async (event: { [x: string]: any; }, context: any) => {
 
     console.log(' ts lambda')
 
@@ -22,7 +22,7 @@ export const handler = (event: { [x: string]: any; }, context: any) => {
 
     if (action === 'getLabels'){
         console.log('getting image labels')
-        const result = getLabels(event); // requesting labels associate to image
+        const result = await getLabels(event); // requesting labels associate to image
         console.log(result)
     }
 
@@ -34,15 +34,15 @@ export const handler = (event: { [x: string]: any; }, context: any) => {
 
 const getLabels = async (info: any) => {
     const {key} = info
-    console.log(key, ' ---')
-    // instance db
+    console.log('!!', process.env)
 
     const param = {
-        TableName: process.env.TABLE,
-        Key: {KEY_NAME: { N: key}}
+        TableName: 'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF', // process.env.TABLE,
+        Key: { 'image': { S: key}} // KEY_NAME
     }
+
     const data = await ddbClient.send(new GetItemCommand(param));
-    console.log("Success", data.Item);
+    console.log("Success: ", data.Item);
     return data;
 }
 
