@@ -14,7 +14,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
 
     // Detect requested action from the Amazon API Gateway Event
     const action = event['action']
-    const key = event['image'] // image
+    const key = event['key'] // image
 
     if (!action || !key){
         return(console.log('no info provided'))
