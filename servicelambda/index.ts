@@ -1,5 +1,5 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
-const ddbClient = new DynamoDBClient({ region: 'eu-west-1' });
+const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 // Constructors for Amazon DynamoDB and S3 resource object
 /*
