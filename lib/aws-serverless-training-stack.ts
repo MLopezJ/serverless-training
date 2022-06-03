@@ -381,6 +381,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       // is noy a good practice to give it a name for scalability reason 
       
     })
+    
     ​
     const queue = new sqs.Queue(this, 'ImageQueue', {
       visibilityTimeout: cdk.Duration.seconds(30),
