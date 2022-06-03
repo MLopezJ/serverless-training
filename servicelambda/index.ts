@@ -50,12 +50,12 @@ const getLabels = async (key: any) => {
     private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/
     private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/esta.jpg
     */
-    const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
+    // const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const param = {
         TableName: process.env.TABLE,
         Key: { 'image': { S: key}}
     }
-    console.log('2- Requesting labels ', value)
+    console.log('2- Requesting labels ', param)
 
     const data = await ddbClient.send(new GetItemCommand(param));
     console.log('3- info returned: ', data)
