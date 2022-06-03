@@ -48,6 +48,7 @@ const getLabels = async (key: any) => {
         TableName: process.env.TABLE,
         Key: { 'image': { S: value}}
     }
+    console.log(value)
 
     const data = await ddbClient.send(new GetItemCommand(param));
     return data && data.Item ? data.Item : undefined
