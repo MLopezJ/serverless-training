@@ -32,7 +32,10 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         const result = await getLabels(key);
         console.log('4- result to return: ', result)
 
-        return !result ? `No labels related to ${key}` : result
+        if (!result)
+            console.log(`No labels related to ${key}`)
+
+        return result
     }
 
     if (action === 'deleteImage'){
@@ -59,7 +62,7 @@ const getLabels = async (key: any) => {
 
     const data = await ddbClient.send(new GetItemCommand(param));
     console.log('3- info returned: ', data)
-    return data && data.Item ? data.Item : undefined
+    return data.Item
 }
 
 /*
