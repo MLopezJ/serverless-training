@@ -49,11 +49,6 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
 }
 
 const getLabels = async (key: any) => {
-    /*
-    private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/
-    private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/esta.jpg
-    */
-    // const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const param = {
         TableName: process.env.TABLE,
         Key: { 'image': { S: key}}
