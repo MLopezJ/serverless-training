@@ -1,11 +1,10 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
-// import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 // Constructor for S3
-/*
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
@@ -13,7 +12,6 @@ const s3 = new S3Client({
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
     }
 })
-*/
 
 export const handler = async (event: { [x: string]: any; }, context: any) => {
 
