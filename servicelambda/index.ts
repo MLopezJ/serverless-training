@@ -1,5 +1,5 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
-import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+// import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -60,6 +60,7 @@ const getLabels = async (key: any) => {
     return data.Item
 }
 
+/*
 const deleteImage = async (key: string) => {
     const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const bucketName = process.env.BUCKET
@@ -82,13 +83,10 @@ const deleteImage = async (key: string) => {
     
 
     // delete labels
-    /*
     const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
     console.log(deleteLabels)
-    */
 
     // delete image
-    /*
     const bucketRequest = new DeleteObjectCommand(bucketParam)
     const bucketResponse = await s3.send(bucketRequest)
     console.log(bucketResponse)
@@ -98,10 +96,10 @@ const deleteImage = async (key: string) => {
     console.log(resizedBucketResponse)
 
     return ({bucketResponse, resizedBucketResponse})
-    */
     
     const data = await ddbClient.send(new GetObjectCommand(bucketParam));
     console.log(data)
     return data
     
 }
+*/
