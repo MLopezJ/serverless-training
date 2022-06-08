@@ -42,7 +42,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         console.log('deleting image from buckets')
 
         // requesting labels associate to image
-        const result = await deleteImage(key);
+        const result = '';// await deleteImage(key);
 
         return !result ? `Not possible to delete ${key}` : result
     }
