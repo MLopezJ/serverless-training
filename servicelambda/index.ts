@@ -42,7 +42,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         console.log('deleting image from buckets')
 
         // requesting labels associate to image
-        const result = '';// await deleteImage(key);
+        const result = await deleteImage(key);
 
         return !result ? `Not possible to delete ${key}` : result
     }
@@ -60,7 +60,7 @@ const getLabels = async (key: any) => {
     return data.Item
 }
 
-/*
+
 const deleteImage = async (key: string) => {
     const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const bucketName = process.env.BUCKET
@@ -80,8 +80,11 @@ const deleteImage = async (key: string) => {
         Bucket : resizedBucketName,
         Key: value
     }
+
+    return 'testing'
     
 
+    /*
     // delete labels
     const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
     console.log(deleteLabels)
@@ -100,6 +103,6 @@ const deleteImage = async (key: string) => {
     const data = await ddbClient.send(new GetObjectCommand(bucketParam));
     console.log(data)
     return data
+    */
     
 }
-*/
