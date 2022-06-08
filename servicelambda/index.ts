@@ -1,7 +1,7 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 // import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
-import { S3Client } from "@aws-sdk/client-s3"
+//import { S3Client } from "@aws-sdk/client-s3"
 
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
