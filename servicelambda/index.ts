@@ -26,11 +26,9 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
     }
 
     if (action === 'getLabels'){
-        console.log('1- getting image labels: ', key)
 
         // requesting labels associate to image
         const result = await getLabels(key);
-        console.log('4- result to return: ', result)
 
         if (!result)
             console.log(`No labels related to ${key}`)
@@ -53,10 +51,8 @@ const getLabels = async (key: any) => {
         TableName: process.env.TABLE,
         Key: { 'image': { S: key}}
     }
-    console.log('2- Requesting labels ', param)
 
     const data = await ddbClient.send(new GetItemCommand(param));
-    console.log('3- info returned: ', data)
     return data.Item
 }
 
