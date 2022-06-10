@@ -80,11 +80,11 @@ const deleteImage = async (key: string) => {
         Key: value
     }
 
-    console.log(bucketParam)
-    const data = await ddbClient.send(new GetObjectCommand(bucketParam));
-    console.log(data)
-    return data
-    
+
+    const get = new GetObjectCommand(bucketParam)
+    const getResponse = await s3.send(get)
+    console.log(getResponse)
+    return getResponse
 
     /*
     // delete labels
