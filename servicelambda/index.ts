@@ -1,7 +1,7 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 // import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
-import { S3Client } from "@aws-sdk/client-s3"
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"
 
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -81,7 +81,9 @@ const deleteImage = async (key: string) => {
         Key: value
     }
 
-    return 'testing'
+    const data = await ddbClient.send(new GetObjectCommand(bucketParam));
+    console.log(data)
+    return data
     
 
     /*
@@ -99,10 +101,6 @@ const deleteImage = async (key: string) => {
     console.log(resizedBucketResponse)
 
     return ({bucketResponse, resizedBucketResponse})
-    
-    const data = await ddbClient.send(new GetObjectCommand(bucketParam));
-    console.log(data)
-    return data
     */
     
 }
