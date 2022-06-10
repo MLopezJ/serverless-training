@@ -80,6 +80,7 @@ const deleteImage = async (key: string) => {
         Key: value
     }
 
+    console.log(bucketParam)
     const data = await ddbClient.send(new GetObjectCommand(bucketParam));
     console.log(data)
     return data
