@@ -42,7 +42,10 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
         // requesting labels associate to image
         const result = await deleteImage(key);
 
-        return !result ? `Not possible to delete ${key}` : result
+        if (!result)
+            console.log(`Impossible to delete image: ${key}`)
+
+        return result
     }
 }
 
