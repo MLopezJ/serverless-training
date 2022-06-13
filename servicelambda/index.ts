@@ -4,20 +4,12 @@ import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/clie
 import { S3Client, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3"
 
 // Constructor for Amazon DynamoDB
-const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const ddbClient = new DynamoDBClient({
+    
+ });
 
 // Constructor for S3
-console.log('acces key: ',process.env.AWS_ACCESS_KEY_ID!, ' secret: ',process.env.AWS_SECRET_ACCESS_KEY!)
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID ?? ''
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY! ?? ''
-console.log({accessKeyId}, {secretAccessKey})
-const s3 = new S3Client({
-    region: process.env.AWS_REGION,
-    credentials: {
-        accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey
-    }
-})
+const s3 = new S3Client({})
 
 export const handler = async (event: { [x: string]: any; }, context: any) => {
 
@@ -68,7 +60,9 @@ const deleteImage = async (key: string) => {
     const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const bucketName = process.env.BUCKET
     const resizedBucketName = process.env.RESIZEDBUCKET
-    console.log(bucketName, ' bucket name')
+    console.log(bucketName, ' bucket name', resizedBucketName, ' resized bucket name')
+    console.log('acces key: ',process.env.AWS_ACCESS_KEY_ID!, ' secret: ',process.env.AWS_SECRET_ACCESS_KEY!)
+    console.log('!!!!!!!!!! ', process.env)
 
     const labelsParam = {
         TableName: process.env.TABLE,

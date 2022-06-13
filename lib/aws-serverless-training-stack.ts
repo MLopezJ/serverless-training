@@ -170,14 +170,15 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       environment: {
         "TABLE": table.tableName,
         "BUCKET": imageBucket.bucketName,
-        "RESIZEDBUCKET": resizedBucket.bucketName
+        "RESIZEDBUCKET": resizedBucket.bucketName,
       }
       /*
       bundling: {
         minify: true,
         externalModules: ['aws-sdk'],
       },
-      */
+      */,
+      
     });
     ​
     // define permisions
