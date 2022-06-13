@@ -4,9 +4,7 @@ import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/clie
 import { S3Client, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3"
 
 // Constructor for Amazon DynamoDB
-const ddbClient = new DynamoDBClient({
-    
- });
+const ddbClient = new DynamoDBClient({});
 
 // Constructor for S3
 const s3 = new S3Client({})
