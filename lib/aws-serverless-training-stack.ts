@@ -182,7 +182,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     });
     ​
     // define permisions
-    imageBucket.grantWrite(serviceFn);
+    imageBucket.grantReadWrite(serviceFn);
     resizedBucket.grantWrite(serviceFn);
     table.grantReadWriteData(serviceFn);
 
