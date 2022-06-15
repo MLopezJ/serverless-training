@@ -1,5 +1,4 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
-// import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
 import { S3Client, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
@@ -73,14 +72,6 @@ const deleteImage = async (key: string) => {
         Bucket : resizedBucketName,
         Key: value
     }
-
-
-    const get = new GetObjectCommand(bucketParam)
-    const getList = new ListObjectsCommand({Bucket:bucketName})
-    const getResponse = await s3.send(get)
-    const getListResponse = await s3.send(getList)
-    console.log(getResponse)
-    console.log(getListResponse)
 
     // delete labels
     const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
