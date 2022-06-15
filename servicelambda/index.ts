@@ -1,7 +1,7 @@
 import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 // import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
-import { S3Client, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3"
+import { S3Client, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({});
@@ -81,9 +81,7 @@ const deleteImage = async (key: string) => {
     const getListResponse = await s3.send(getList)
     console.log(getResponse)
     console.log(getListResponse)
-    return getResponse
 
-    /*
     // delete labels
     const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
     console.log(deleteLabels)
@@ -98,6 +96,5 @@ const deleteImage = async (key: string) => {
     console.log(resizedBucketResponse)
 
     return ({bucketResponse, resizedBucketResponse})
-    */
     
 }
