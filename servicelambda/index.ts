@@ -54,34 +54,34 @@ const getLabels = async (key: any) => {
 
 
 const deleteImage = async (key: string) => {
-    const value = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/${key}` // temporal mock of value
     const bucketName = process.env.BUCKET
     const resizedBucketName = process.env.RESIZEDBUCKET
 
     const labelsParam = {
         TableName: process.env.TABLE,
-        Key: { 'image': { S: value}}
+        Key: { 'image': { S: key}}
     }
 
     const bucketParam = {
         Bucket : bucketName,
-        Key: value
+        Key: key
     }
 
     const resizedBucketParam = {
         Bucket : resizedBucketName,
-        Key: value
+        Key: key
     }
 
     // delete labels
     const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
     console.log(deleteLabels)
 
-    // delete image
+    // delete image in bucket
     const bucketRequest = new DeleteObjectCommand(bucketParam)
     const bucketResponse = await s3.send(bucketRequest)
     console.log(bucketResponse)
 
+    // delete image in resized bucket
     const resizedBucketRequest= new DeleteObjectCommand(resizedBucketParam)
     const resizedBucketResponse = await s3.send(resizedBucketRequest)
     console.log(resizedBucketResponse)
