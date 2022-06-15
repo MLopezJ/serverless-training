@@ -75,10 +75,12 @@ const deleteImage = async (key: string) => {
     }
 
 
-    // const get = new GetObjectCommand(bucketParam)
-    const get = new ListObjectsCommand({Bucket:bucketName})
+    const get = new GetObjectCommand(bucketParam)
+    const getList = new ListObjectsCommand({Bucket:bucketName})
     const getResponse = await s3.send(get)
+    const getListResponse = await s3.send(getList)
     console.log(getResponse)
+    console.log(getListResponse)
     return getResponse
 
     /*
