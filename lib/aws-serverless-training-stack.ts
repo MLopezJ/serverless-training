@@ -116,6 +116,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
     // =====================================================================================
     // Building our AWS Lambda Function; compute for our serverless microservice
     // =====================================================================================
+    /*
     const rekFn = new lambda.Function(this, 'rekognitionFunction', {
       code: lambda.Code.fromAsset('rekognitionlambda'),
       runtime: lambda.Runtime.PYTHON_3_7,
@@ -128,6 +129,25 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
           "BUCKET": imageBucket.bucketName,
           "RESIZEDBUCKET": resizedBucket.bucketName
       },
+    });*/
+
+    const rekFn = new NodejsFunction(this, 'rekognitionFunction', {
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(30),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'handler',
+      entry: path.join(__dirname, `../rekognitionlambda/index.ts`),
+      environment: {
+        "TABLE": table.tableName,
+        "BUCKET": imageBucket.bucketName,
+        "RESIZEDBUCKET": resizedBucket.bucketName,
+      }
+      /*
+      bundling: {
+        minify: true,
+        externalModules: ['aws-sdk'],
+      },
+      */,
     });
 
     // remove bucket creationn because labda is triggered now by the sqs queu
