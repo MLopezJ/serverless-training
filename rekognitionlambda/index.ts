@@ -49,13 +49,9 @@ const rekFunction = async (bucket: string, key: string) => {
 
     const response = await detect_labels(params);
 
-    let labels: (string | undefined)[] = []
+    const labels = response?.Labels?.map(element => element.Name)
+    saveLabelsInDb(labels)
 
-    if (response?.Labels){
-        response.Labels.map(label => {
-            labels.push(label.Name)
-        })
-    }
     console.log('LABELS ', labels)
 
     return labels
@@ -91,7 +87,8 @@ const detect_labels = async (params: DetectLabelsCommandInput) => {
       }
 };
 
-const saveLabelsInDb = () => {
+const saveLabelsInDb = (labels: (string | undefined)[] | undefined) => {
+    console.log(labels)
     console.log('work in progress to save recognized labels on dynamo db')
 }
 
