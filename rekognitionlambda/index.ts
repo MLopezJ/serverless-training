@@ -91,6 +91,10 @@ const detect_labels = async (params: DetectLabelsCommandInput) => {
       }
 };
 
+const saveLabelsInDb = () => {
+    console.log('work in progress to save recognized labels on dynamo db')
+}
+
 const generateThumb = (bucket: string, key: string) => {
     console.log('Work in progress from generateThumb ', bucket, key)
 }
