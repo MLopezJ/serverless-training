@@ -84,6 +84,7 @@ const detect_labels = async (params: DetectLabelsCommandInput) => {
         return response; // For unit tests.
       } catch (err) {
         console.log("Error", err);
+        return err
       }
 };
 
