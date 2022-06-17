@@ -14,7 +14,7 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
     console.log("Lambda processing event: ", event)
 
     const records = event.Records ?? []
-
+    /*
     await records.map((payload: { body: string; }) => {
         const eventInformation = JSON.parse(payload.body)
         eventInformation.Records.map(async (element: { s3: { bucket: { name: any; }; object: { key: any; }; }; }) => {
@@ -24,7 +24,27 @@ export const handler = async (event: { [x: string]: any; }, context: any) => {
             generateThumb(bucketName, bucketKey)
         })
     })
+    */
 
+    const payload = records[0].body
+    const eventInformation = JSON.parse(payload)
+    const bucketName = eventInformation.Records[0].s3.bucket.name
+    const bucketKey = eventInformation.Records[0].s3.object.key
+    const photo: string = replaceSubstringWithColon(bucketKey);
+    const params = {
+        Image: {
+          S3Object: {
+            Bucket: bucketName,
+            Name: photo
+          },
+        },
+        MaxLabels: maxLabels,
+        MinConfidence: minConfidence
+    }
+
+    const response = await rekogClient.send(new DetectLabelsCommand(params));
+    console.log(response)
+    console.log('!!!!!!!!!!!!!')
     return event
 }
 
@@ -48,7 +68,6 @@ const rekFunction = async (bucket: string, key: string) => {
     }
 
     const response: any = await detect_labels(params);
-
     const labels = response?.Labels?.map((element: { Name: string; }) => element.Name)
     saveLabelsInDb(labels)
 
