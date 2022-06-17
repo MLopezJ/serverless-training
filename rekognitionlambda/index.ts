@@ -47,9 +47,9 @@ const rekFunction = async (bucket: string, key: string) => {
         MinConfidence: minConfidence
     }
 
-    const response = await detect_labels(params);
+    const response: any = await detect_labels(params);
 
-    const labels = response?.Labels?.map(element => element.Name)
+    const labels = response?.Labels?.map((element: { Name: string; }) => element.Name)
     saveLabelsInDb(labels)
 
     console.log('LABELS ', labels)
