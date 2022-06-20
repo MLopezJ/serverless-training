@@ -52,13 +52,13 @@ const imageLabels = async (bucket: string, key: string) => {
         MinConfidence: minConfidence
     }
 
-    const response: any = await rekFunction(params);
+    const labelsRequest: any = await rekFunction(params);
     /*
-    const labels: object[] = await response?.Labels?.map((element: { Name: string; }, index: number) => {
+    const labels: object[] = await labelsRequest?.Labels?.map((element: { Name: string; }, index: number) => {
         return {[`object${index}`] : element}
     })
     */
-    const labels = response?.Labels?.reduce(
+    const labels = labelsRequest?.Labels?.reduce(
         (previousValue: {[k: string]: {[k: string]: string}}, currentValue: string, currentIndex: number) => { 
             previousValue[`object${currentIndex}`] = {'S':currentValue}
             return previousValue
