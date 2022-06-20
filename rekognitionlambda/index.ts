@@ -112,6 +112,7 @@ const saveLabelsInDb = async (labels: any, key: string) => {
     }
     console.log('requesting ')
     console.log(param)
+    console.log(param.Item)
     const data = await ddbClient.send(new PutItemCommand(param));
     console.log(data)
     return data
