@@ -26,12 +26,12 @@ export const handler = async (event: SQSEvent) => {
 async function processImage(element: { s3: { bucket: { name: any; }; object: { key: any; }; }; }) {
     const bucketName = element.s3.bucket.name;
     const bucketKey = element.s3.object.key;
-    await rekFunction(bucketName, bucketKey);
+    await imageLabels(bucketName, bucketKey);
     await generateThumb(bucketName, bucketKey);
 }
 
-const rekFunction = async (bucket: string, key: string) => {
-    console.log('Work in progress from rekFunction ', bucket, key)
+const imageLabels = async (bucket: string, key: string) => {
+    console.log('Work in progress from imageLabels ', bucket, key)
 
     const photo: string = replaceSubstringWithColon(key);
 
@@ -49,7 +49,7 @@ const rekFunction = async (bucket: string, key: string) => {
         MinConfidence: minConfidence
     }
 
-    const response: any = await detect_labels(params);
+    const response: any = await rekFunction(params);
     const labels = response?.Labels?.map((element: { Name: string; }) => element.Name)
     saveLabelsInDb(labels)
 
@@ -58,7 +58,7 @@ const rekFunction = async (bucket: string, key: string) => {
     return labels
 }
 
-const detect_labels = async (params: DetectLabelsCommandInput) => {
+const rekFunction = async (params: DetectLabelsCommandInput) => {
     try {
         const response = await rekogClient.send(new DetectLabelsCommand(params));
         console.log(response.Labels)
