@@ -113,9 +113,10 @@ const saveLabelsInDb = async (labels: any, key: string) => {
     console.log('requesting ')
     console.log(param)
     console.log(param.Item)
-    const data = await ddbClient.send(new PutItemCommand(param));
-    console.log(data)
-    return data
+    const putCommand = new PutItemCommand(param)
+    const saveLabels = await ddbClient.send(putCommand)
+    console.log(saveLabels)
+    return saveLabels
 }
 
 const generateThumb = async (bucket: string, key: string) => {
