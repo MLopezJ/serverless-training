@@ -7,9 +7,11 @@ const maxLabels: number = 10
 const minConfidence: number = 50
 
 // Set the AWS Region.
-const REGION = "eu-west-1"; //e.g. "us-east-1"
+const REGION = "eu-west-1";
+
 // Create SNS service object.
 const rekogClient = new RekognitionClient({ region: REGION });
+
 // Constructor for Amazon DynamoDB
 const ddbClient = new DynamoDBClient({ region: REGION });
 
@@ -53,11 +55,6 @@ const imageLabels = async (bucket: string, key: string) => {
     }
 
     const labelsRequest: any = await rekFunction(params);
-    /*
-    const labels: object[] = await labelsRequest?.Labels?.map((element: { Name: string; }, index: number) => {
-        return {[`object${index}`] : element}
-    })
-    */
     const labels = labelsRequest?.Labels?.reduce(
         (previousValue: {[k: string]: {[k: string]: string}}, currentValue: {Name: string}, currentIndex: number) => { 
             previousValue[`object${currentIndex}`] = { S : currentValue.Name }
@@ -65,9 +62,6 @@ const imageLabels = async (bucket: string, key: string) => {
          }, {})
 
     await saveLabelsInDb(labels, photo)
-
-    console.log('LABELS ', labels)
-
     return labels
 }
 
@@ -89,13 +83,9 @@ const saveLabelsInDb = async (labels: any, key: string) => {
         TableName: process.env.TABLE,
         Item: item
     }
-    console.log('requesting ')
-    console.log(param)
-    console.log(param.Item)
     try{
         const putCommand = new PutItemCommand(param)
         const saveLabels = await ddbClient.send(putCommand)
-        console.log(saveLabels)
         return saveLabels
     } catch (err) {
         console.log("Error", err);
