@@ -1,4 +1,5 @@
 import { DetectLabelsCommand, DetectLabelsCommandInput } from  "@aws-sdk/client-rekognition";
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 
@@ -9,6 +10,8 @@ const minConfidence: number = 50
 const REGION = "eu-west-1"; //e.g. "us-east-1"
 // Create SNS service object.
 const rekogClient = new RekognitionClient({ region: REGION });
+// Constructor for Amazon DynamoDB
+const ddbClient = new DynamoDBClient({ region: REGION });
 
 
 export const handler = async (event: SQSEvent) => {
@@ -50,8 +53,18 @@ const imageLabels = async (bucket: string, key: string) => {
     }
 
     const response: any = await rekFunction(params);
-    const labels = response?.Labels?.map((element: { Name: string; }) => element.Name)
-    saveLabelsInDb(labels)
+    /*
+    const labels: object[] = await response?.Labels?.map((element: { Name: string; }, index: number) => {
+        return {[`object${index}`] : element}
+    })
+    */
+    const labels = response?.Labels?.reduce(
+        (previousValue: {[k: string]: {[k: string]: string}}, currentValue: string, currentIndex: number) => { 
+            previousValue[`object${currentIndex}`] = {'S':currentValue}
+            return previousValue
+         }, {})
+
+    saveLabelsInDb(labels, photo)
 
     console.log('LABELS ', labels)
 
@@ -89,9 +102,17 @@ const rekFunction = async (params: DetectLabelsCommandInput) => {
       }
 };
 
-const saveLabelsInDb = (labels: (string | undefined)[] | undefined) => {
-    console.log(labels)
+const saveLabelsInDb = async (labels: any, key: string) => {
+    const item = labels
+    item['image'] = key
     console.log('work in progress to save recognized labels on dynamo db')
+    const param = {
+        TableName: process.env.TABLE,
+        Item: item
+    }
+    const data = await ddbClient.send(new PutItemCommand(param));
+    console.log(data)
+    return data
 }
 
 const generateThumb = async (bucket: string, key: string) => {
