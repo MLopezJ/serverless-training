@@ -83,7 +83,7 @@ const rekFunction = async (params: DetectLabelsCommandInput) => {
 
 const saveLabelsInDb = async (labels: any, key: string) => {
     const item = labels
-    item['image'] = key
+    item['image'] = { S : key }
     console.log('work in progress to save recognized labels on dynamo db')
     const param = {
         TableName: process.env.TABLE,
