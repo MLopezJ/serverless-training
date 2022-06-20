@@ -59,12 +59,12 @@ const imageLabels = async (bucket: string, key: string) => {
     })
     */
     const labels = labelsRequest?.Labels?.reduce(
-        (previousValue: {[k: string]: {[k: string]: string}}, currentValue: string, currentIndex: number) => { 
-            previousValue[`object${currentIndex}`] = {'S':currentValue}
+        (previousValue: {[k: string]: {[k: string]: string}}, currentValue: {Name: string}, currentIndex: number) => { 
+            previousValue[`object${currentIndex}`] = {'S':currentValue.Name}
             return previousValue
          }, {})
 
-    saveLabelsInDb(labels, photo)
+    await saveLabelsInDb(labels, photo)
 
     console.log('LABELS ', labels)
 
