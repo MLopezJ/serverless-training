@@ -60,7 +60,7 @@ const imageLabels = async (bucket: string, key: string) => {
     */
     const labels = labelsRequest?.Labels?.reduce(
         (previousValue: {[k: string]: {[k: string]: string}}, currentValue: {Name: string}, currentIndex: number) => { 
-            previousValue[`object${currentIndex}`] = {'S':currentValue.Name}
+            previousValue[`object${currentIndex}`] = { S : currentValue.Name }
             return previousValue
          }, {})
 
@@ -74,28 +74,7 @@ const imageLabels = async (bucket: string, key: string) => {
 const rekFunction = async (params: DetectLabelsCommandInput) => {
     try {
         const response = await rekogClient.send(new DetectLabelsCommand(params));
-        console.log(response.Labels)
-        if (response.Labels){
-            response.Labels.forEach(label =>{
-                console.log(`Confidence: ${label.Confidence}`)
-                console.log(`Name: ${label.Name}`)
-                if (label.Instances){
-                    console.log('Instances:')
-                    label.Instances.forEach(instance => {
-                        console.log(instance)
-                    })
-                }
-                if (label.Parents){
-                    console.log('Parents:')
-                label.Parents.forEach(name => {
-                    console.log(name)
-                })
-                }
-                console.log("-------")
-            })
-        }
-        
-        return response; // For unit tests.
+        return response; 
       } catch (err) {
         console.log("Error", err);
         return err
@@ -113,10 +92,15 @@ const saveLabelsInDb = async (labels: any, key: string) => {
     console.log('requesting ')
     console.log(param)
     console.log(param.Item)
-    const putCommand = new PutItemCommand(param)
-    const saveLabels = await ddbClient.send(putCommand)
-    console.log(saveLabels)
-    return saveLabels
+    try{
+        const putCommand = new PutItemCommand(param)
+        const saveLabels = await ddbClient.send(putCommand)
+        console.log(saveLabels)
+        return saveLabels
+    } catch (err) {
+        console.log("Error", err);
+        return err
+    }
 }
 
 const generateThumb = async (bucket: string, key: string) => {
