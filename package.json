@@ -12,6 +12,7 @@
     "outputs": "aws cloudformation describe-stacks --stack-name dev-AwsServerlessTrainingPipelineStack | jq '.Stacks | .[] | .Outputs | reduce .[] as $i ({}; .[$i.OutputKey] = $i.OutputValue)'"
   },
   "devDependencies": {
+    "@types/aws-lambda": "8.10.100",
     "@types/jest": "27.5.1",
     "@types/node": "17.0.38",
     "@types/prettier": "2.6.3",
