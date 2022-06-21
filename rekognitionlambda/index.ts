@@ -4,7 +4,7 @@ import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 //import {sharp} = require('sharp');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 
 
 const maxLabels: number = 10
@@ -104,7 +104,7 @@ const generateThumb = async (bucket: string, key: string) => {
 
     const photo: string = replaceSubstringWithColon(key);
     const srcKey    = decodeURIComponent(photo.replace(/\+/g, " "));
-    const dstBucket = bucket + "-resized";
+    const dstBucket = process.env.RESIZEDBUCKET! // bucket + "-resized";
     const dstKey    = "resized-" + srcKey;
 
     // Infer the image type from the file suffix.
@@ -156,7 +156,7 @@ const getImage = async (bucket:string, key:string) => {
 
 const resizeImage = async (body:any, width:number) => {
     try {
-        var buffer = await sharp(body).resize(width).toBuffer();
+        var buffer = ''// await sharp(body).resize(width).toBuffer();
         console.log(buffer)
         return buffer
     } catch (error) {
@@ -165,7 +165,7 @@ const resizeImage = async (body:any, width:number) => {
     }
 }
 
-const putImage = async (bucket:string, key:string, body:Buffer) => {
+const putImage = async (bucket:string, key:string, body:Buffer|string) => {
 
     try {
         const destparams = {
