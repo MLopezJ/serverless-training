@@ -3,7 +3,8 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
-import sharp = require('sharp');
+//import sharp = require('sharp');
+const sharp = require('sharp');
 
 
 const maxLabels: number = 10
