@@ -27,14 +27,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
         input: source,
         installCommands: [
           'npm install -g aws-cdk',
-          'npm install',
-          'rm -rf node_modules/sharp',
-          'SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux --libc=glibc sharp'
       ],
       commands: [
           'npm ci',
-          'rm -rf node_modules/sharp',
-          'SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux --libc=glibc sharp',
           'npm run build',
           'npx cdk synth'
       ]
