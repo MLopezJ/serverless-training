@@ -116,7 +116,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       compatibleRuntimes: [
         lambda.Runtime.NODEJS_14_X,
       ],
-      code: lambda.Code.fromAsset('layer/sharp'),
+      code: lambda.Code.fromAsset('layers/sharp'),
       description: 'Uses a 3rd party library called Sharp to resize images',
     });
 
@@ -149,11 +149,11 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
         "BUCKET": imageBucket.bucketName,
         "RESIZEDBUCKET": resizedBucket.bucketName,
       },
-      /*
+      /**/
       bundling: {
         minify: false,
         externalModules: ['aws-sdk', 'sharp'],
-      },*/
+      },
       layers: [sharpLayer],
     });
 
