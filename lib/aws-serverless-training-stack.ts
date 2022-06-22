@@ -149,10 +149,11 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
         "BUCKET": imageBucket.bucketName,
         "RESIZEDBUCKET": resizedBucket.bucketName,
       },
+      /*
       bundling: {
         minify: false,
         externalModules: ['aws-sdk', 'sharp'],
-      },
+      },*/
       layers: [sharpLayer],
     });
 
