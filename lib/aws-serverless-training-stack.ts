@@ -112,7 +112,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       description: 'A layer to enable the PIL library in our Rekognition lambda'
     });
 
-    const sharpLayer = new lambda.LayerVersion(this, 'sharp-layer-', {
+    const sharpLayer = new lambda.LayerVersion(this, 'sharp-layer', {
       compatibleRuntimes: [
         lambda.Runtime.NODEJS_14_X,
       ],
@@ -152,7 +152,7 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       /**/
       bundling: {
         minify: false,
-        externalModules: ['aws-sdk', 'sharp'],
+        externalModules: ['aws-sdk', 'sharp', '/opt/nodejs/node_modules/sharp'],
       },
       layers: [sharpLayer],
     });

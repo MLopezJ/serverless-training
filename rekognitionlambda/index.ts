@@ -3,13 +3,15 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
-// import { sharp } from '/opt/nodejs/node_modules/sharp';
-//import sharp = require('/opt/nodejs/sharp');
-const {default : sharp} = require('/opt/nodejs/sharp');
+// @ts-ignore
+import * as sharpModule from '/opt/nodejs/node_modules/sharp'; // Uses the location of the module IN the layer
+import type * as sharpType from "sharp";
+const sharp = sharpModule as typeof sharpType;
 
+console.log(sharp);
 
-const maxLabels: number = 10
-const minConfidence: number = 50
+const maxLabels: number = 10;
+const minConfidence: number = 50;
 
 // Set the AWS Region.
 const REGION = "eu-west-1";
@@ -123,16 +125,17 @@ const generateThumb = async (bucket: string, key: string) => {
     }
 
     // Download the image from the S3 source bucket.
-    const originalImage = await getImage(bucket, srcKey)
+    const originalImage = await getImage(bucket, srcKey);
+    console.log('ORIGINAL IMAGE', originalImage);
 
     // set thumbnail width. Resize will set the height automatically to maintain aspect ratio.
     const width  = 200;
 
     // Use the sharp module to resize the image and save in a buffer.
-    const buffer = await resizeImage(originalImage!.Body, width)
+    const buffer = await resizeImage(originalImage!.Body, width);
 
     // Upload the thumbnail image to the destination bucket
-    await putImage(dstBucket,dstKey,buffer!)
+    await putImage(dstBucket,dstKey,buffer!);
 
     console.log('Successfully resized ' + bucket + '/' + srcKey +
         ' and uploaded to ' + dstBucket + '/' + dstKey);
@@ -145,10 +148,10 @@ const getImage = async (bucket:string, key:string) => {
             Key: key
         };
         
-        const originalImageRequest = new GetObjectCommand(params)
-        var originalImage = await s3.send(originalImageRequest)
-        console.log(originalImage)
-        return originalImage
+        const originalImageRequest = new GetObjectCommand(params);
+        var originalImage = await s3.send(originalImageRequest);
+        // console.log(originalImage)
+        return originalImage;
     } catch (error) {
         console.log(error);
         return;
@@ -157,9 +160,13 @@ const getImage = async (bucket:string, key:string) => {
 
 const resizeImage = async (body:any, width:number) => {
     try {
+        const test = sharp(body);
+        console.log('test', test);
+        console.log('BODY ', body);
         var buffer = await sharp(body).resize(width).toBuffer();
-        console.log(buffer)
-        return buffer
+        console.log('SHARP RESPONSE');
+        console.log(buffer);
+        return buffer;
     } catch (error) {
         console.log(error);
         return;
