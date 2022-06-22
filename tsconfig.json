@@ -23,7 +23,11 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": "./",
+    "paths": {
+      "/opt/nodejs/sharp": ["layers/sharp/nodejs/sharp"]
+    }
   },
   "exclude": [
     "node_modules",

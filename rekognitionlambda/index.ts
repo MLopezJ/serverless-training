@@ -3,7 +3,9 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
-import { sharp } from '/opt/nodejs/node_modules/sharp';
+// import { sharp } from '/opt/nodejs/node_modules/sharp';
+//import sharp = require('/opt/nodejs/sharp');
+const {default : sharp} = require('/opt/nodejs/sharp');
 
 
 const maxLabels: number = 10

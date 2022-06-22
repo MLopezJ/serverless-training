@@ -112,6 +112,13 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
       description: 'A layer to enable the PIL library in our Rekognition lambda'
     });
 
+    const sharpLayer = new lambda.LayerVersion(this, 'sharp-layer-', {
+      compatibleRuntimes: [
+        lambda.Runtime.NODEJS_14_X,
+      ],
+      code: lambda.Code.fromAsset('layer/sharp'),
+      description: 'Uses a 3rd party library called Sharp to resize images',
+    });
 
     // =====================================================================================
     // Building our AWS Lambda Function; compute for our serverless microservice
@@ -141,13 +148,12 @@ export class AwsServerlessTrainingStack extends cdk.Stack  {
         "TABLE": table.tableName,
         "BUCKET": imageBucket.bucketName,
         "RESIZEDBUCKET": resizedBucket.bucketName,
-      }
-      /*
-      bundling: {
-        minify: true,
-        externalModules: ['aws-sdk'],
       },
-      */,
+      bundling: {
+        minify: false,
+        externalModules: ['aws-sdk', 'sharp'],
+      },
+      layers: [sharpLayer],
     });
 
     // remove bucket creationn because labda is triggered now by the sqs queu
