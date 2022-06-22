@@ -1,12 +1,13 @@
 import { DetectLabelsCommand, DetectLabelsCommandInput } from  "@aws-sdk/client-rekognition";
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { ContinuousBackupsUnavailableException, DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 // @ts-ignore
 import * as sharpModule from '/opt/nodejs/node_modules/sharp'; // Uses the location of the module IN the layer
 import type * as sharpType from "sharp";
-const sharp = sharpModule as typeof sharpType;
+// const sharp = sharpModule as typeof sharpType;
+const sharp = sharpModule.default as typeof sharpType;
 
 console.log(sharp);
 
@@ -26,7 +27,8 @@ const ddbClient = new DynamoDBClient({ region: REGION });
 const s3 = new S3Client({})
 
 export const handler = async (event: SQSEvent) => {
-    console.log("Lambda processing event: ", event)
+    console.log("Lambda processing event: ")
+    console.log(JSON.stringify(event))
     const records = event.Records
     for await (const payload of records) {
         const eventInformation = JSON.parse(payload.body)
