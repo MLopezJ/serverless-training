@@ -6,10 +6,8 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
 // @ts-ignore
 import * as sharpModule from '/opt/nodejs/node_modules/sharp'; // Uses the location of the module IN the layer
 import type * as sharpType from "sharp";
-// const sharp = sharpModule as typeof sharpType;
+import type { Readable } from "stream";
 const sharp = sharpModule.default as typeof sharpType;
-
-console.log(sharp);
 
 const maxLabels: number = 10;
 const minConfidence: number = 50;
@@ -109,8 +107,7 @@ const generateThumb = async (bucket: string, key: string) => {
 
     const photo: string = replaceSubstringWithColon(key);
     const srcKey    = decodeURIComponent(photo.replace(/\+/g, " "));
-    const dstBucket = process.env.RESIZEDBUCKET! // bucket + "-resized";
-    const dstKey    = "resized-" + srcKey;
+    const dstBucket = process.env.RESIZEDBUCKET!;
 
     // Infer the image type from the file suffix.
     const typeMatch = srcKey.match(/\.([^.]*)$/);
@@ -128,20 +125,28 @@ const generateThumb = async (bucket: string, key: string) => {
 
     // Download the image from the S3 source bucket.
     const originalImage = await getImage(bucket, srcKey);
-    console.log('ORIGINAL IMAGE', originalImage);
+    const stream = originalImage!.Body as Readable
+    const buffer = await streamToBuffer(stream);
 
     // set thumbnail width. Resize will set the height automatically to maintain aspect ratio.
     const width  = 200;
 
     // Use the sharp module to resize the image and save in a buffer.
-    const buffer = await resizeImage(originalImage!.Body, width);
+    const resizedImage = await resizeImage(buffer, width);
 
     // Upload the thumbnail image to the destination bucket
-    await putImage(dstBucket,dstKey,buffer!);
+    await putImage(dstBucket,srcKey,resizedImage!);
 
     console.log('Successfully resized ' + bucket + '/' + srcKey +
-        ' and uploaded to ' + dstBucket + '/' + dstKey);
+        ' and uploaded to ' + dstBucket + '/' + srcKey);
 }
+
+const streamToBuffer = (stream: Readable) => new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = []
+    stream.on('data', chunk => chunks.push(chunk))
+    stream.once('end', () => resolve(Buffer.concat(chunks)))
+    stream.once('error', reject)
+})
 
 const getImage = async (bucket:string, key:string) => {
     try {
@@ -152,7 +157,6 @@ const getImage = async (bucket:string, key:string) => {
         
         const originalImageRequest = new GetObjectCommand(params);
         var originalImage = await s3.send(originalImageRequest);
-        // console.log(originalImage)
         return originalImage;
     } catch (error) {
         console.log(error);
@@ -160,14 +164,9 @@ const getImage = async (bucket:string, key:string) => {
     }
 }
 
-const resizeImage = async (body:any, width:number) => {
+const resizeImage = async (body:Buffer, width:number) => {
     try {
-        const test = sharp(body);
-        console.log('test', test);
-        console.log('BODY ', body);
         var buffer = await sharp(body).resize(width).toBuffer();
-        console.log('SHARP RESPONSE');
-        console.log(buffer);
         return buffer;
     } catch (error) {
         console.log(error);
@@ -187,13 +186,11 @@ const putImage = async (bucket:string, key:string, body:Buffer) => {
 
         const putResizedImageRequest= new PutObjectCommand(destparams)
         const putResizedImage = await s3.send(putResizedImageRequest)
-        console.log(putResizedImage)
-
+        return putResizedImage
     } catch (error) {
         console.log(error);
         return;
     }
-
 }
 
 // Clean the string to add the ":" symbol back into requested name
