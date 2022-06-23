@@ -72,6 +72,7 @@ const imageLabels = async (bucket: string, key: string) => {
     return labels
 }
 
+
 const rekFunction = async (params: DetectLabelsCommandInput) => {
     try {
         const response: DetectLabelsCommandOutput = await rekogClient.send(new DetectLabelsCommand(params));
