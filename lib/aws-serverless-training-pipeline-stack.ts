@@ -21,7 +21,6 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
     })
 
-    
     const pipeline =  new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MyPipeline',
       synth: new ShellStep('SynthStep', {
@@ -30,12 +29,9 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
           'npm install -g aws-cdk',
       ],
       commands: [
-          'echo `pwd`',
           'npm ci',
           'npm run build',
-          'echo `pwd`',
           'cd layers/sharp/nodejs && npm ci && cd ../../..',
-          'echo `pwd`',
           'npx cdk synth',
       ]
       })
