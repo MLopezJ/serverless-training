@@ -37,7 +37,7 @@ export const handler = async (event: SQSEvent) => {
     return event
 }
 
-async function processImage(element: { s3: { bucket: { name: any; }; object: { key: any; }; }; }) {
+async function processImage(element: { s3: { bucket: { name: string; }; object: { key: string; }; }; }) {
     const bucketName = element.s3.bucket.name;
     const bucketKey = element.s3.object.key;
     await imageLabels(bucketName, bucketKey);
