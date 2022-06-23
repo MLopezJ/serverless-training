@@ -13,6 +13,7 @@ import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pi
  *  Github branch value should be set up in System manager - Parameter store with name as below
  * */
 
+
 export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
