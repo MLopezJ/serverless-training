@@ -1,5 +1,5 @@
-import { DetectLabelsCommand, DetectLabelsCommandInput } from  "@aws-sdk/client-rekognition";
-import { ContinuousBackupsUnavailableException, DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DetectLabelsCommand, DetectLabelsCommandInput, DetectLabelsCommandOutput, Label } from  "@aws-sdk/client-rekognition";
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import  { RekognitionClient } from "@aws-sdk/client-rekognition";
 import { SQSEvent} from 'aws-lambda'
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
@@ -45,8 +45,6 @@ async function processImage(element: { s3: { bucket: { name: string; }; object: 
 }
 
 const imageLabels = async (bucket: string, key: string) => {
-    console.log('Work in progress from imageLabels ', bucket, key)
-
     const photo: string = replaceSubstringWithColon(key);
 
     console.log('Currently processing the following image')
@@ -63,10 +61,10 @@ const imageLabels = async (bucket: string, key: string) => {
         MinConfidence: minConfidence
     }
 
-    const labelsRequest: any = await rekFunction(params);
-    const labels = labelsRequest?.Labels?.reduce(
-        (previousValue: {[k: string]: {[k: string]: string}}, currentValue: {Name: string}, currentIndex: number) => { 
-            previousValue[`object${currentIndex}`] = { S : currentValue.Name }
+    const labelsRequest: DetectLabelsCommandOutput = await rekFunction(params);
+    const labels: {[k: string]: {[k: string]: string}} | undefined  = labelsRequest?.Labels?.reduce(
+        (previousValue: {[k: string]: {[k: string]: string}}, currentValue: Label, currentIndex: number) => { 
+            previousValue[`object${currentIndex}`] = { S : currentValue.Name! }
             return previousValue
          }, {})
 
@@ -76,9 +74,9 @@ const imageLabels = async (bucket: string, key: string) => {
 
 const rekFunction = async (params: DetectLabelsCommandInput) => {
     try {
-        const response = await rekogClient.send(new DetectLabelsCommand(params));
+        const response: DetectLabelsCommandOutput = await rekogClient.send(new DetectLabelsCommand(params));
         return response; 
-      } catch (err) {
+      } catch (err: any) {
         console.log("Error", err);
         return err
       }
