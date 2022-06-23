@@ -29,12 +29,12 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
           'npm install -g aws-cdk',
       ],
       commands: [
-          'pwd',
+          'echo `pwd`',
           'npm ci',
           'npm run build',
-          'pwd',
+          'echo `pwd`',
           'cd layers/sharp/nodejs && npm ci && cd ../../..',
-          'pwd',
+          'echo `pwd`',
           'npx cdk synth',
       ]
       })
