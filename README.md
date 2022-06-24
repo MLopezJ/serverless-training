@@ -15,6 +15,9 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ## Set GitHub personal access token for the pipeline
 
+> **Note**
+> This is using the [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), not the [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
+
 The token should have the scopes `repo` and `admin:repo_hook`.
 
-    aws ssm put-parameter --type String --name /${STACK_NAME_PREFIX:-ServerlessTraining}Stack-github-access-token --value <your personall access key>
+    aws secretsmanager create-secret --name ${STACK_NAME_PREFIX:-ServerlessTraining}PipelineStack-github-access-token --secret-string <your personal access key>
