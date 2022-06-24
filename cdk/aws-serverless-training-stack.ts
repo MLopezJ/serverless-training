@@ -13,7 +13,6 @@ import * as event_sources from "aws-cdk-lib/aws-lambda-event-sources";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { HttpMethods } from "aws-cdk-lib/aws-s3";
-import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
@@ -72,14 +71,6 @@ export class AwsServerlessTrainingStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "bucketURL", {
       value: uiBucket.bucketWebsiteDomainName,
-    });
-
-    // =====================================================================================
-    // Deploy site contents to S3 Bucket
-    // =====================================================================================
-    new s3deploy.BucketDeployment(this, "DeployWebsite", {
-      sources: [s3deploy.Source.asset("./public")],
-      destinationBucket: uiBucket,
     });
 
     // =====================================================================================
