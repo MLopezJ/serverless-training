@@ -26,13 +26,12 @@ export class ContinuousDeploymentPipelineStack extends Stack {
       this.node.tryGetContext("backend.branch"),
       {
         authentication: SecretValue.secretsManager(
-          `${this.stackName}/github-access-token`
+          `${this.stackName}-github-access-token`
         ),
       }
     );
 
     const pipeline = new CodePipeline(this, "Pipeline", {
-      pipelineName: "MyPipeline",
       synth: new ShellStep("SynthStep", {
         input: source,
         installCommands: ["npm install -g aws-cdk"],
