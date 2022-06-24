@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "outputs": "aws cloudformation describe-stacks --stack-name dev-AwsServerlessTrainingPipelineStack | jq '.Stacks | .[] | .Outputs | reduce .[] as $i ({}; .[$i.OutputKey] = $i.OutputValue)'",
+    "outputs": "aws cloudformation describe-stacks --stack-name dev-ServerlessTrainingPipelineStack | jq '.Stacks | .[] | .Outputs | reduce .[] as $i ({}; .[$i.OutputKey] = $i.OutputValue)'",
     "postinstall": "husky install && check-node-version --package"
   },
   "lint-staged": {

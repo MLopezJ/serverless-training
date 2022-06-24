@@ -22,12 +22,11 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
     super(scope, id, props);
 
     const source = CodePipelineSource.gitHub(
-      "MLopezJ/serverless-training",
-      "dev",
+      this.node.tryGetContext("backend.repository"),
+      this.node.tryGetContext("backend.branch"),
       {
         authentication: SecretValue.secretsManager(
-          "serverless-training-git-access-token",
-          { jsonField: "serverless-training-git-access-token" }
+          `${this.stackName}/github-access-token`
         ),
       }
     );
