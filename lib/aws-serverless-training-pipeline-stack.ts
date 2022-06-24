@@ -1,6 +1,10 @@
-import { Construct } from 'constructs'; 
-import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import { SecretValue, Stack, StackProps } from "aws-cdk-lib";
+import {
+  CodePipeline,
+  CodePipelineSource,
+  ShellStep,
+} from "aws-cdk-lib/pipelines";
+import { Construct } from "constructs";
 import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
 
 /**
@@ -17,32 +21,31 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const source = CodePipelineSource.gitHub('MLopezJ/serverless-training', 'dev', {
-      authentication: SecretValue.secretsManager('serverless-training-git-access-token', {jsonField: 'serverless-training-git-access-token'})
-    })
+    const source = CodePipelineSource.gitHub(
+      "MLopezJ/serverless-training",
+      "dev",
+      {
+        authentication: SecretValue.secretsManager(
+          "serverless-training-git-access-token",
+          { jsonField: "serverless-training-git-access-token" }
+        ),
+      }
+    );
 
-    const pipeline =  new CodePipeline(this, 'Pipeline', {
-      pipelineName: 'MyPipeline',
-      synth: new ShellStep('SynthStep', {
+    const pipeline = new CodePipeline(this, "Pipeline", {
+      pipelineName: "MyPipeline",
+      synth: new ShellStep("SynthStep", {
         input: source,
-        installCommands: [
-          'npm install -g aws-cdk',
-      ],
-      commands: [
-          'npm ci',
-          'npm run build',
-          'cd layers/sharp/nodejs && npm ci && cd ../../..',
-          'npx cdk synth',
-      ]
-      })
+        installCommands: ["npm install -g aws-cdk"],
+        commands: [
+          "npm ci",
+          "npm run build",
+          "cd layers/sharp/nodejs && npm ci && cd ../../..",
+          "npx cdk synth",
+        ],
+      }),
     });
 
-    const devStage = pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, 'dev'));
-
-    // devStage.addActions(new ManualApprovalAction({
-    //   actionName: 'ManualApproval',
-    //   runOrder: devStage.nextSequentialRunOrder(),
-    // }));
-
+    pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, "dev"));
   }
 }
