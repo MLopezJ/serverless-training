@@ -1,7 +1,5 @@
-
-  
 import { Stage, StageProps } from "aws-cdk-lib";
-import { Construct } from 'constructs'; 
+import { Construct } from "constructs";
 import { AwsServerlessTrainingStack } from "./aws-serverless-training-stack";
 
 /**
@@ -10,8 +8,7 @@ import { AwsServerlessTrainingStack } from "./aws-serverless-training-stack";
 export class AwsServerlessTrainingPipelineStage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
-    
-    new AwsServerlessTrainingStack(this, 'AwsServerlessTrainingStack-dev');
-    
+
+    new AwsServerlessTrainingStack(this, "AwsServerlessTrainingStack-dev");
   }
 }
