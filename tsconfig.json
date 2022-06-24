@@ -1,37 +1,17 @@
 {
+  "extends": "@nordicsemiconductor/asset-tracker-cloud-code-style/tsconfig.json",
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": false,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "lib": ["es2018", "dom"],
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
       "sharp": ["./layers/sharp/nodejs/node_modules/sharp"],
-      "/opt/nodejs/node_modules/sharp": ["./layers/sharp/nodejs/node_modules/sharp"]
+      "/opt/nodejs/node_modules/sharp": [
+        "./layers/sharp/nodejs/node_modules/sharp"
+      ]
     }
   },
-  "exclude": [
-    "node_modules",
-    "cdk.out"
-  ]
+  "exclude": ["node_modules", "cdk.out"]
 }
