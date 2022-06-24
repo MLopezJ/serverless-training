@@ -97,7 +97,7 @@ export class ImageGalleryStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: "handler",
-      entry: path.join(__dirname, `../rekognitionlambda/index.ts`),
+      entry: path.join(__dirname, `../../rekognitionlambda/index.ts`),
       environment: {
         TABLE: table.tableName,
         BUCKET: imageBucket.bucketName,
@@ -133,7 +133,7 @@ export class ImageGalleryStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(5),
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: "handler",
-      entry: path.join(__dirname, `../servicelambda/index.ts`),
+      entry: path.join(__dirname, `../../servicelambda/index.ts`),
       environment: {
         TABLE: table.tableName,
         BUCKET: imageBucket.bucketName,

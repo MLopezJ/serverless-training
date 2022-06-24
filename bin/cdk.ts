@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { stackNamePrefix } from "cdk/stackName";
 import "source-map-support/register";
+import { stackNamePrefix } from "../cdk/stackName";
 import { ContinuousDeploymentPipelineStack } from "../cdk/stacks/continuous-deployment-pipeline";
 import { ImageGalleryStack } from "../cdk/stacks/image-gallery";
 

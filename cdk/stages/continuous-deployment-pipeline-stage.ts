@@ -1,6 +1,6 @@
 import { Stage, StageProps } from "aws-cdk-lib";
-import { stackNamePrefix } from "cdk/stackName";
 import { Construct } from "constructs";
+import { stackNamePrefix } from "../stackName";
 import { ImageGalleryStack } from "../stacks/image-gallery";
 
 /**
