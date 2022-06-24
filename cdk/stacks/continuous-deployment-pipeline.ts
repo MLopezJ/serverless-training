@@ -41,6 +41,10 @@ export class ContinuousDeploymentPipelineStack extends Stack {
           "cd layers/sharp/nodejs && npm ci && cd ../../..",
           "npx cdk synth",
         ],
+        env: {
+          BACKEND_REPOSITORY: this.node.tryGetContext("backend.repository"),
+          BACKEND_BRANCH: this.node.tryGetContext("backend.branch"),
+        },
       }),
     });
 
