@@ -82,17 +82,6 @@ export class AwsServerlessTrainingStack extends cdk.Stack {
     });
     new cdk.CfnOutput(this, "ddbTable", { value: table.tableName });
 
-    // =====================================================================================
-    // Building our AWS Lambda Function; compute for our serverless microservice
-    // =====================================================================================
-    new lambda.LayerVersion(this, "pil", {
-      code: lambda.Code.fromAsset("reklayer"),
-      compatibleRuntimes: [lambda.Runtime.PYTHON_3_7],
-      license: "Apache-2.0",
-      description:
-        "A layer to enable the PIL library in our Rekognition lambda",
-    });
-
     const sharpLayer = new lambda.LayerVersion(this, "sharp-layer", {
       compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
       code: lambda.Code.fromAsset("layers/sharp"),
