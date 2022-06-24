@@ -5,3 +5,4 @@ yarn.lock
 .cdk.staging
 cdk.out
 .envrc
+tsconfig.tsbuildinfo
