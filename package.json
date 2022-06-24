@@ -1,9 +1,6 @@
 {
   "name": "aws-serverless-training",
   "version": "0.1.0",
-  "bin": {
-    "aws-serverless-training": "bin/aws-serverless-training.js"
-  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

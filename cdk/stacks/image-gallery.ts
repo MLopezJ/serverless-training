@@ -23,7 +23,7 @@ const imageBucketResourceId = "cdk-serverlesstraining-imgbucket";
 const resizedBucketId = imageBucketResourceId + "-resized";
 const websiteBucketName = "cdk-rekn-publicbucket";
 
-export class AwsServerlessTrainingStack extends cdk.Stack {
+export class ImageGalleryStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 

@@ -5,7 +5,7 @@ import {
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { Construct } from "constructs";
-import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pipeline-stage";
+import { ContinuousDeploymentPipelineStage } from "../stages/continuous-deployment-pipeline-stage";
 
 /**
  * Stack to define the awsserverless-training application pipeline
@@ -17,7 +17,7 @@ import { AwsServerlessTrainingPipelineStage } from "./aws-serverless-training-pi
  *  Github branch value should be set up in System manager - Parameter store with name as below
  * */
 
-export class AwsServerlessTrainingPipelineStack extends Stack {
+export class ContinuousDeploymentPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -45,6 +45,8 @@ export class AwsServerlessTrainingPipelineStack extends Stack {
       }),
     });
 
-    pipeline.addStage(new AwsServerlessTrainingPipelineStage(this, "dev"));
+    pipeline.addStage(
+      new ContinuousDeploymentPipelineStage(this, "devStage", "dev")
+    );
   }
 }
