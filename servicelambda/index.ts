@@ -1,91 +1,121 @@
-import { DynamoDBClient, GetItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+import {
+  DeleteItemCommand,
+  DynamoDBClient,
+  GetItemCommand,
+} from "@aws-sdk/client-dynamodb";
 
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { fromEnv } from "@nordicsemiconductor/from-env";
+import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
-// Constructor for Amazon DynamoDB
+const { TableName, bucketName, resizedBucketName } = fromEnv({
+  TableName: "TABLE",
+  bucketName: "BUCKET",
+  resizedBucketName: "RESIZEDBUCKET",
+})(process.env);
+
 const ddbClient = new DynamoDBClient({});
+const s3 = new S3Client({});
 
-// Constructor for S3
-const s3 = new S3Client({})
+export const handler = async (
+  event: APIGatewayEvent
+): Promise<APIGatewayProxyResult> => {
+  // Detect requested action from the Amazon API Gateway Event
+  const { action, key } = event.queryStringParameters ?? {};
 
-export const handler = async (event: { [x: string]: any; }, context: any) => {
+  if (action !== undefined || key !== undefined) {
+    console.debug("no info provided");
+    return {
+      statusCode: 400,
+      headers: {
+        ["content-type"]: "text/plain; utf-8",
+      },
+      body: "no info provided",
+    };
+  }
 
-    // Detect requested action from the Amazon API Gateway Event
-    const action = event['action']
-    const key = event['key'] // image
+  if (action === "getLabels" && key !== undefined) {
+    // requesting labels associate to image
+    const result = await ddbClient.send(
+      new GetItemCommand({
+        TableName,
+        Key: { image: { S: key } },
+      })
+    );
 
-    if (!action || !key){
-        return(console.log('no info provided'))
+    if (result === undefined) {
+      console.debug(`No labels related to ${key}`);
+      return {
+        statusCode: 404,
+        headers: {
+          ["content-type"]: "text/plain; utf-8",
+        },
+        body: `No labels related to ${key}`,
+      };
     }
 
-    if (action === 'getLabels'){
+    return {
+      statusCode: 200,
+      headers: {
+        ["content-type"]: "application/json; utf-8",
+      },
+      body: JSON.stringify(result),
+    };
+  }
 
-        // requesting labels associate to image
-        const result = await getLabels(key);
+  if (action === "deleteImage" && key !== undefined) {
+    console.log("deleting image from buckets");
 
-        if (!result)
-            console.log(`No labels related to ${key}`)
-
-        return result
+    // requesting labels associate to image
+    try {
+      await deleteImage(key);
+      return {
+        statusCode: 202,
+        body: "",
+      };
+    } catch {
+      console.error(`Impossible to delete image: ${key}`);
+      return {
+        statusCode: 400,
+        headers: {
+          ["content-type"]: "text/plain; utf-8",
+        },
+        body: `Impossible to delete image: ${key}`,
+      };
     }
+  }
 
-    if (action === 'deleteImage'){
-        console.log('deleting image from buckets')
+  // Unknown action provided
+  console.debug(`Unknown action provided: ${action}!`);
+  return {
+    statusCode: 400,
+    headers: {
+      ["content-type"]: "text/plain; utf-8",
+    },
+    body: `Unknown action provided: ${action}!`,
+  };
+};
 
-        // requesting labels associate to image
-        const result = await deleteImage(key);
+const deleteImage = async (key: string): Promise<void> => {
+  // delete labels
+  await ddbClient.send(
+    new DeleteItemCommand({
+      TableName,
+      Key: { image: { S: key } },
+    })
+  );
 
-        if (!result)
-            console.log(`Impossible to delete image: ${key}`)
+  // delete image in bucket
+  const bucketRequest = new DeleteObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+  });
+  await s3.send(bucketRequest);
 
-        return result
-    }
-}
-
-const getLabels = async (key: any) => {
-    const param = {
-        TableName: process.env.TABLE,
-        Key: { 'image': { S: key}}
-    }
-
-    const data = await ddbClient.send(new GetItemCommand(param));
-    return data.Item
-}
-
-
-const deleteImage = async (key: string) => {
-    const bucketName = process.env.BUCKET
-    const resizedBucketName = process.env.RESIZEDBUCKET
-
-    const labelsParam = {
-        TableName: process.env.TABLE,
-        Key: { 'image': { S: key}}
-    }
-
-    const bucketParam = {
-        Bucket : bucketName,
-        Key: key
-    }
-
-    const resizedBucketParam = {
-        Bucket : resizedBucketName,
-        Key: key
-    }
-
-    // delete labels
-    const deleteLabels = await ddbClient.send(new DeleteItemCommand(labelsParam));
-    console.log(deleteLabels)
-
-    // delete image in bucket
-    const bucketRequest = new DeleteObjectCommand(bucketParam)
-    const bucketResponse = await s3.send(bucketRequest)
-    console.log(bucketResponse)
-
-    // delete image in resized bucket
-    const resizedBucketRequest= new DeleteObjectCommand(resizedBucketParam)
-    const resizedBucketResponse = await s3.send(resizedBucketRequest)
-    console.log(resizedBucketResponse)
-
-    return ({bucketResponse, resizedBucketResponse})
-    
-}
+  // delete image in resized bucket
+  const resizedBucketRequest = new DeleteObjectCommand({
+    Bucket: resizedBucketName,
+    Key: key,
+  });
+  await s3.send(resizedBucketRequest);
+};
