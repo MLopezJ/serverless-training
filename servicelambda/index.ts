@@ -17,25 +17,18 @@ const { TableName, bucketName, resizedBucketName } = fromEnv({
 const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
 
-type responseType = {
-	statusCode: number
-	body: string
-	headers: { [header: string]: string }
-}
-
 const response = (
 	statusCode: number,
 	body = '',
-	headers: { [header: string]: string } = {
-		['content-type']: 'text/plain; utf-8',
+	headers?: Record<string, string>,
+): APIGatewayProxyResult => ({
+	statusCode,
+	headers: {
+		'content-type': 'text/plain; utf-8',
+		...(headers ?? {}),
 	},
-): responseType => {
-	return {
-		statusCode,
-		headers,
-		body,
-	}
-}
+	body,
+})
 
 export const handler = async (
 	event: APIGatewayEvent,
