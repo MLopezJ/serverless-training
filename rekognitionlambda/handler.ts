@@ -1,4 +1,4 @@
-import { SQSEvent } from 'aws-lambda'
+import { S3Event, SQSEvent } from 'aws-lambda'
 
 export const handler =
 	({
@@ -13,8 +13,8 @@ export const handler =
 		console.log(JSON.stringify(event))
 		const records = event.Records
 		for await (const payload of records) {
-			const eventInformation = JSON.parse(payload.body)
-			for await (const element of eventInformation.Records) {
+			const eventInformation = JSON.parse(payload.body) as S3Event
+			for await (const element of eventInformation?.Records ?? []) {
 				const bucketName = element.s3.bucket.name
 				const bucketKey = element.s3.object.key
 				await imageLabels(bucketName, bucketKey)
