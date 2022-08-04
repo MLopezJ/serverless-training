@@ -17,7 +17,10 @@ export const generateThumb =
 		dstBucket: string
 		imageThumbnail: (image: Buffer, size: number) => Promise<Buffer>
 	}) =>
-	async (bucket: string, key: string): Promise<void> => {
+	async (
+		bucket: string,
+		key: string,
+	): Promise<{ success: boolean } | { error: Error }> => {
 		console.log('Work in progress from generateThumb ', bucket, key)
 
 		const photo = replaceSubstringWithColon(key)
@@ -26,15 +29,15 @@ export const generateThumb =
 		// Infer the image type from the file suffix.
 		const typeMatch = /\.([^.]*)$/.exec(srcKey)
 		if (typeMatch === null) {
-			console.log('Could not determine the image type.')
-			return
+			return {
+				error: new Error(`Could not determine the image type of '${srcKey}'`),
+			}
 		}
 
 		// Check that the image type is supported
 		const imageType = typeMatch[1].toLowerCase()
 		if (imageType != 'jpg' && imageType != 'png') {
-			console.log(`Unsupported image type: ${imageType}`)
-			return
+			return { error: new Error(`Unsupported image type: ${imageType}`) }
 		}
 
 		// Download the image from the S3 source bucket.
@@ -45,8 +48,9 @@ export const generateThumb =
 			}),
 		)
 		if (originalImage === undefined) {
-			console.error(`Original image ${bucket}/${srcKey} not found.`)
-			return
+			return {
+				error: new Error(`Original image not found in ${bucket}/${srcKey} .`),
+			}
 		}
 		const stream = originalImage.Body as Readable
 		const buffer = await streamToBuffer(stream)
@@ -58,12 +62,11 @@ export const generateThumb =
 		//const resizedImage = await sharp(buffer).resize(width).toBuffer();
 		const resizedImage = await imageThumbnail(buffer, width)
 		if (resizedImage === undefined) {
-			console.error(`Failed to resize image ${bucket}/${srcKey}!`)
-			return
+			return { error: new Error(`Failed to resize image ${bucket}/${srcKey}!`) }
 		}
 
 		// Upload the thumbnail image to the destination bucket
-		await s3.send(
+		const uploadThumbnail = await s3.send(
 			new PutObjectCommand({
 				Bucket: dstBucket,
 				Key: srcKey,
@@ -71,6 +74,12 @@ export const generateThumb =
 				ContentType: 'image',
 			}),
 		)
+
+		if (uploadThumbnail === undefined) {
+			return {
+				error: Error(`Failed to upload resize image ${dstBucket}/${srcKey}`),
+			}
+		}
 
 		console.log(
 			'Successfully resized ' +
@@ -82,4 +91,6 @@ export const generateThumb =
 				'/' +
 				srcKey,
 		)
+
+		return { success: true }
 	}
