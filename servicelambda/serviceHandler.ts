@@ -13,8 +13,7 @@ export const serviceHandler =
 	) =>
 	async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
 		const { action, key } = event.queryStringParameters ?? {}
-
-		if (action !== undefined || key !== undefined) {
+		if (action === undefined || key === undefined) {
 			console.debug('no info provided')
 			return response(400, 'no info provided')
 		}
