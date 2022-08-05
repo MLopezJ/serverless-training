@@ -1,3 +1,4 @@
+import { GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { response } from './response'
 
@@ -7,7 +8,7 @@ export const serviceHandler =
 			getLabels,
 			deleteImage,
 		}: {
-			getLabels: (key: string) => Promise<unknown> // FIXME: use proper type
+			getLabels: (key: string) => Promise<GetItemCommandOutput>
 			deleteImage: (key: string) => Promise<void>
 		},
 	) =>
