@@ -6,3 +6,4 @@ yarn.lock
 cdk.out
 .envrc
 tsconfig.tsbuildinfo
+coverage/
