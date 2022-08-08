@@ -1,5 +1,8 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { RekognitionClient } from '@aws-sdk/client-rekognition'
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
+import {
+	DetectLabelsCommand,
+	RekognitionClient,
+} from '@aws-sdk/client-rekognition'
 import { imageLabels } from './imageLabels'
 
 describe('imageLabels', () => {
@@ -13,9 +16,31 @@ describe('imageLabels', () => {
 	const photo =
 		'private/eu-west-1:4876d49a-26d7-4fa9-9f07-d0672587cb86/photos/coffee-espresso.png'
 
-	it('Should use AWS RekognitionClient to detect labels on image', async () => {
-		const rekogClient: RekognitionClient = { send: jest.fn() } as any
-		const ddbClient: DynamoDBClient = { send: jest.fn() } as any
+	it('Should store recognized labels', async () => {
+		// response from rekogClient
+		const labels = {
+			Labels: [
+				{ Name: 'drink', Confidence: 78 },
+				{ Name: 'cup', Confidence: 65 },
+				{ Name: 'coffee', Confidence: 89 },
+				{ Name: 'spoon', Confidence: 90 },
+				{ Name: undefined, Confidence: 5 },
+			],
+		}
+		// Check the code sets the expected data struct format to the detected labels
+		const spectedLabelsFormat: Record<string, Record<string, string>> = {
+			object0: { S: 'drink' },
+			object1: { S: 'cup' },
+			object2: { S: 'coffee' },
+			object3: { S: 'spoon' },
+			object4: { S: 'unknown' },
+		}
+		const rekogClientSend = jest.fn().mockImplementation(() => labels)
+		const rekogClient: RekognitionClient = {
+			send: rekogClientSend,
+		} as any
+		const ddbClientSend = jest.fn()
+		const ddbClient: DynamoDBClient = { send: ddbClientSend } as any
 
 		await imageLabels({
 			rekogClient,
@@ -39,18 +64,7 @@ describe('imageLabels', () => {
 				},
 			}),
 		)
-	})
-
-	it('Should use AWS DynamoDBClient to save detected labels', async () => {
-		const rekogClient: RekognitionClient = { send: jest.fn() } as any
-		const ddbClient: DynamoDBClient = { send: jest.fn() } as any
-		await imageLabels({
-			rekogClient,
-			maxLabels,
-			minConfidence,
-			ddbClient,
-			TableName,
-		})(bucket, imageKey)
+		expect(rekogClientSend.mock.lastCall[0]).toBeInstanceOf(DetectLabelsCommand)
 
 		expect(ddbClient.send).toHaveBeenCalledWith(
 			expect.objectContaining({
@@ -59,10 +73,12 @@ describe('imageLabels', () => {
 						image: {
 							S: imageKey,
 						},
+						...spectedLabelsFormat,
 					},
 					TableName: TableName,
 				},
 			}),
 		)
+		expect(ddbClientSend.mock.lastCall[0]).toBeInstanceOf(PutItemCommand)
 	})
 })
