@@ -1,4 +1,8 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import {
+	DynamoDBClient,
+	GetItemCommand,
+	GetItemCommandOutput,
+} from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import {
 	GetObjectCommand,
@@ -14,6 +18,8 @@ const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
 const resizedBucket =
 	'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9'
 const key = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-${Ulid.generate().toCanonical()}.png` // make it simpler
+const TableName =
+	'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF'
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
@@ -54,14 +60,41 @@ const requestImage = async (Key: string, Bucket: string) => {
 	}
 }
 
+const requestLabels = async (TableName: string, Key: string) => {
+	try {
+		return await ddbClient.send(
+			new GetItemCommand({
+				TableName,
+				Key: { image: { S: Key } },
+			}),
+		)
+	} catch (err: any) {
+		throw new Error(`Failed to fetch labels`)
+	}
+}
+
+const includeKeyword = (labels: GetItemCommandOutput, keyword: string) =>
+	Object.values(labels.Item ?? {})
+		.map((label) => label.S)
+		.includes(keyword)
+
 const main = async () => {
+	console.log({ key })
+	const image = path.join(process.cwd(), 'shark.jpg')
+	const keyword = 'Shark'
 	await uploadImage({
-		location: path.join(process.cwd(), 'shark.jpg'),
+		location: image,
 		Key: key,
 		Bucket: bucket,
 	})
 	const res = await retry(async () => requestImage(key, resizedBucket))
 	console.log({ res })
+	const labels = await retry(async () => requestLabels(TableName, key))
+	if (!includeKeyword(labels, keyword))
+		throw new Error(
+			`labels of { KEY: ${key} } in { TABLENAME: ${TableName} } has not relation with the {IMAGE: ${image} }. '${keyword}' label not found`,
+		)
+	console.log('end to end test finished successfully')
 }
 
 main().then(console.log).catch(console.error)
@@ -117,9 +150,5 @@ const thumbImg = await s3.send(
 )
 
 // check labels (dynamo)
-const checkLabels = await ddbClient.send(
-	new GetItemCommand({
-		TableName,
-	}),
-)
+
 */
