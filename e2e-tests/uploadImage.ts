@@ -91,6 +91,7 @@ const main = async () => {
 		async () => requestImage(key, resizedBucket),
 		'check generated thumb',
 	)
+	// TODO: validate generated thumb is smaller than original image and if thumb is an image
 	const labels = await retry(
 		async () => requestLabels(TableName, key),
 		'check generated labels',
