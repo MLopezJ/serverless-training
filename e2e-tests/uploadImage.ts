@@ -14,12 +14,12 @@ import { Ulid } from 'id128'
 import * as path from 'path'
 import { retry } from './retry'
 
-const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
+const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3' // TODO: get value from env
 const resizedBucket =
-	'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9'
-const key = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-${Ulid.generate().toCanonical()}.png` // make it simpler
+	'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9' // TODO: get value from env
+const key = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-${Ulid.generate().toCanonical()}.png` // TODO: make it simpler
 const TableName =
-	'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF'
+	'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF' // TODO: get value from env
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
