@@ -55,8 +55,7 @@ const requestImage = async (Key: string, Bucket: string) => {
 			}),
 		)
 	} catch (err: any) {
-		console.log(err['$metadata'].httpStatusCode, 'failing here')
-		throw new Error(`Failed to fetch image from key`)
+		throw new Error(`Failed to fetch image from ${Key} in ${Bucket}`)
 	}
 }
 
@@ -87,9 +86,15 @@ const main = async () => {
 		Key: key,
 		Bucket: bucket,
 	})
-	const res = await retry(async () => requestImage(key, resizedBucket))
-	console.log({ res })
-	const labels = await retry(async () => requestLabels(TableName, key))
+	// const thumb =
+	await retry(
+		async () => requestImage(key, resizedBucket),
+		'check generated thumb',
+	)
+	const labels = await retry(
+		async () => requestLabels(TableName, key),
+		'check generated labels',
+	)
 	if (!includeKeyword(labels, keyword))
 		throw new Error(
 			`labels of { KEY: ${key} } in { TABLENAME: ${TableName} } has not relation with the {IMAGE: ${image} }. '${keyword}' label not found`,
