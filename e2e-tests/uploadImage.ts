@@ -12,33 +12,40 @@ import { Ulid } from 'id128'
 import * as path from 'path'
 
 const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
-
+const resizedBucket =
+	'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9'
+const key = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-${Ulid.generate().toCanonical()}.png` // make it simpler
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
 
-const tests = async () => {
-	const img = await readFile(path.join(process.cwd(), 'e2eTest.jpg'))
-	console.log(img)
-	const imageKey = `e2e-test-${Ulid.generate().toCanonical()}.png`
-	console.log({ imageKey })
-
-	// upload image
-	const res = await s3.send(
+// upload image to AWS S3
+const uploadImage = async ({
+	location,
+	Key,
+	Bucket,
+}: {
+	Key: string
+	location: string
+	Bucket: string
+}) => {
+	const img = await readFile(location)
+	return await s3.send(
 		new PutObjectCommand({
-			Bucket: bucket,
-			Key: imageKey,
+			Bucket,
+			Key,
 			Body: img,
 			ContentType: 'image',
 		}),
 	)
-	console.log(res)
 }
 
 tests().catch((err) => {
 	console.error(err)
 	throw err
 })
+
+*/
 
 /*
 ;(async () => {
