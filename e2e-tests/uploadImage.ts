@@ -1,15 +1,14 @@
-/*
-import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
-
-import { GetItemCommand } from '@aws-sdk/client-dynamodb'
-*/
-
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+	GetObjectCommand,
+	PutObjectCommand,
+	S3Client,
+} from '@aws-sdk/client-s3'
 import { readFile } from 'fs/promises'
 import { Ulid } from 'id128'
 import * as path from 'path'
+import { retry } from './retry'
 
 const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
 const resizedBucket =
@@ -40,7 +39,48 @@ const uploadImage = async ({
 	)
 }
 
-tests().catch((err) => {
+// Request image
+const requestImage = async (Key: string, Bucket: string) => {
+	try {
+		return await s3.send(
+			new GetObjectCommand({
+				Bucket,
+				Key,
+			}),
+		)
+	} catch (err: any) {
+		console.log(err['$metadata'].httpStatusCode, 'failing here')
+		throw new Error(`Failed to fetch image from key`)
+	}
+}
+
+const main = async () => {
+	await uploadImage({
+		location: path.join(process.cwd(), 'shark.jpg'),
+		Key: key,
+		Bucket: bucket,
+	})
+	const res = await retry(async () => requestImage(key, resizedBucket))
+	console.log({ res })
+}
+
+main().then(console.log).catch(console.error)
+
+/*
+uploadImage()
+	.then(() => checkThumb.start())
+	.catch((err) => {
+		console.log('fails here')
+		console.error(err)
+		throw err
+	})
+	*/
+
+/*
+
+checkThumb(
+	'private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-01GA166WYBPQVG36ZYK71XNXV6.png',
+).catch((err) => {
 	console.error(err)
 	throw err
 })
