@@ -7,27 +7,36 @@ import { GetItemCommand } from '@aws-sdk/client-dynamodb'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { readFile } from 'fs/promises'
+import { Ulid } from 'id128'
+import * as path from 'path'
 
 const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
-const imageKey =
-	'private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/e2e-test.png'
 
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
 
-// upload image
-;(async () => {
-	const res = s3.send(
+const tests = async () => {
+	const img = await readFile(path.join(process.cwd(), 'e2eTest.jpg'))
+	console.log(img)
+	const imageKey = `e2e-test-${Ulid.generate().toCanonical()}.png`
+	console.log({ imageKey })
+
+	// upload image
+	const res = await s3.send(
 		new PutObjectCommand({
 			Bucket: bucket,
 			Key: imageKey,
-			Body: imageKey,
+			Body: img,
 			ContentType: 'image',
 		}),
 	)
-	console.log(await res)
-})().catch((err) => {
+	console.log(res)
+}
+
+tests().catch((err) => {
+	console.error(err)
 	throw err
 })
 
