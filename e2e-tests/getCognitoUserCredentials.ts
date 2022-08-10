@@ -29,6 +29,8 @@ export const getCognitoUserCredentials = async ({
 	developerProviderName: string
 }): Promise<{
 	IdentityId: string
+	AccessToken: string
+	IdToken: string
 	Token: string
 	AccessKeyId: string
 	SecretKey: string
@@ -104,11 +106,25 @@ export const getCognitoUserCredentials = async ({
 		}),
 	)
 
+	const { AuthenticationResult } = await cisp.send(
+		new AdminInitiateAuthCommand({
+			AuthFlow: 'ADMIN_NO_SRP_AUTH',
+			UserPoolId: userPoolId,
+			ClientId: userPoolClientId,
+			AuthParameters: {
+				USERNAME: cognitoUsername,
+				PASSWORD: newPassword,
+			},
+		}),
+	)
+
 	return {
 		IdentityId: IdentityId ?? '',
 		Token: Token ?? '',
 		AccessKeyId: Credentials?.AccessKeyId ?? '',
 		SecretKey: Credentials?.SecretKey ?? '',
 		SessionToken: Credentials?.SessionToken ?? '',
+		AccessToken: AuthenticationResult?.AccessToken ?? '',
+		IdToken: AuthenticationResult?.IdToken ?? '',
 	}
 }
