@@ -83,7 +83,7 @@ const includeKeyword = (labels: GetItemCommandOutput, keyword: string) =>
 
 const main = async () => {
 	console.log({ key })
-	const image = path.join(process.cwd(), 'shark.jpg')
+	const image = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
 	await uploadImage({
 		location: image,
