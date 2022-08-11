@@ -2,6 +2,7 @@ import { DynamoDBClient, GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { readFile } from 'fs/promises'
+import { assertThat, is } from 'hamjest'
 import { Ulid } from 'id128'
 import * as path from 'path'
 import { requestLabels } from './utils/requestDynamoDB'
@@ -67,10 +68,9 @@ const main = async () => {
 		async () => requestLabels(ddbClient, TableName, key),
 		'check generated labels',
 	)
-	if (!includeKeyword(labels, keyword))
-		throw new Error(
-			`labels of { KEY: ${key} } in { TABLENAME: ${TableName} } has not relation with the {IMAGE: ${image} }. '${keyword}' label not found`,
-		)
+
+	assertThat(includeKeyword(labels, keyword), is(true))
+
 	console.log('end to end test finished successfully')
 }
 
