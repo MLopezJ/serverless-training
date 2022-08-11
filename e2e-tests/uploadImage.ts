@@ -1,10 +1,11 @@
-import { DynamoDBClient, GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { readFile } from 'fs/promises'
 import { assertThat, is } from 'hamjest'
 import { Ulid } from 'id128'
 import * as path from 'path'
+import { includeKeyword } from './utils/includeKeyword'
 import { requestLabels } from './utils/requestDynamoDB'
 import { requestImage } from './utils/requestS3'
 import { retry } from './utils/retry'
@@ -43,11 +44,6 @@ const uploadImage = async ({
 		}),
 	)
 }
-
-const includeKeyword = (labels: GetItemCommandOutput, keyword: string) =>
-	Object.values(labels.Item ?? {})
-		.map((label) => label.S)
-		.includes(keyword)
 
 const main = async () => {
 	console.log('-- Start --')
