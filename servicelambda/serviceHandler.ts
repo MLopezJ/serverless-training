@@ -23,7 +23,7 @@ export const serviceHandler =
 
 		if (action === 'getLabels' && key !== undefined) {
 			// requesting labels associate to image
-			const result = getLabels(key)
+			const result = await getLabels(key)
 			console.debug(
 				JSON.stringify({
 					action,
@@ -32,7 +32,7 @@ export const serviceHandler =
 				}),
 			)
 
-			if (result === undefined) {
+			if (result.Item === undefined) {
 				console.debug(`No labels related to ${key}`)
 				return response(404, `No labels related to ${key}`)
 			}
