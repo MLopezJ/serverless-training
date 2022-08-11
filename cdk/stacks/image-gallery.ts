@@ -316,7 +316,7 @@ export class ImageGalleryStack extends cdk.Stack {
 		// =====================================================================================
 		const imageAPI = api.root.addResource('images')
 		// GET /images
-		const getImages = imageAPI.addMethod('GET', lambdaIntegration, {
+		imageAPI.addMethod('GET', lambdaIntegration, {
 			requestParameters: {
 				'method.request.querystring.action': true,
 				'method.request.querystring.key': true,
@@ -336,14 +336,6 @@ export class ImageGalleryStack extends cdk.Stack {
 				},
 			],
 		})
-
-		authenticatedRole.addToPolicy(
-			new iam.PolicyStatement({
-				actions: ['execute-api:Invoke'],
-				effect: iam.Effect.ALLOW,
-				resources: [getImages.methodArn],
-			}),
-		)
 
 		// DELETE /images
 		imageAPI.addMethod('DELETE', lambdaIntegration, {
