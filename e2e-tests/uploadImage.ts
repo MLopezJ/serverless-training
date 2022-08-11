@@ -50,6 +50,7 @@ const includeKeyword = (labels: GetItemCommandOutput, keyword: string) =>
 		.includes(keyword)
 
 const main = async () => {
+	console.log('-- Start --')
 	console.log({ key })
 	const image = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
@@ -66,17 +67,17 @@ const main = async () => {
 	// const thumb =
 	await retry(
 		async () => requestImage(s3, key, resizedBucket),
-		'check generated thumb',
+		'Check generated thumb',
 	)
 	// TODO: validate generated thumb is smaller than original image and if thumb is an image
 	const labels = await retry(
 		async () => requestLabels(ddbClient, TableName, key),
-		'check generated labels',
+		'Check generated labels',
 	)
 
 	assertThat(includeKeyword(labels, keyword), is(true))
 
-	console.log('end to end test finished successfully')
+	console.log('-- Finish --')
 }
 
 main().then(console.log).catch(console.error)
