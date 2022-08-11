@@ -1,5 +1,5 @@
 import { GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
-import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { APIGatewayEvent, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { response } from './response'
 
 export const serviceHandler =
@@ -12,7 +12,9 @@ export const serviceHandler =
 			deleteImage: (key: string) => Promise<void>
 		},
 	) =>
-	async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
+	async (event: APIGatewayEvent): Promise<APIGatewayProxyResultV2> => {
+		console.debug(JSON.stringify({ event }))
+
 		const { action, key } = event.queryStringParameters ?? {}
 		if (action === undefined || key === undefined) {
 			console.debug('no info provided')
@@ -22,6 +24,13 @@ export const serviceHandler =
 		if (action === 'getLabels' && key !== undefined) {
 			// requesting labels associate to image
 			const result = getLabels(key)
+			console.debug(
+				JSON.stringify({
+					action,
+					key,
+					result,
+				}),
+			)
 
 			if (result === undefined) {
 				console.debug(`No labels related to ${key}`)

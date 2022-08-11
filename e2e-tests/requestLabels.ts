@@ -1,6 +1,7 @@
 import { CloudFormationClient } from '@aws-sdk/client-cloudformation'
 import { stackOutput } from '@nordicsemiconductor/cloudformation-helpers'
 import { StackOutputs } from 'cdk/stacks/image-gallery'
+import { assertThat, is } from 'hamjest'
 import { stackNamePrefix } from '../cdk/stackName.js'
 import { apiGatewayClient } from './apiGatewayClient'
 import { getCognitoUserCredentials } from './getCognitoUserCredentials'
@@ -32,7 +33,9 @@ const main = async () => {
 	)
 
 	console.log(`${response.status} ${response.statusText}`)
-	console.log(await response.json())
+	console.log(await response.text())
+
+	assertThat(response.status, is(404))
 }
 
 main().then(console.log).catch(console.error)
