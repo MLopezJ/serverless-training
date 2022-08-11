@@ -12,7 +12,7 @@ import {
 import { readFile } from 'fs/promises'
 import { Ulid } from 'id128'
 import * as path from 'path'
-import { retry } from './retry'
+import { retry } from './utils/retry'
 
 const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3' // TODO: get value from env
 const resizedBucket =
