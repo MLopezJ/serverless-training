@@ -1,17 +1,11 @@
-import {
-	DynamoDBClient,
-	GetItemCommand,
-	GetItemCommandOutput,
-} from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
-import {
-	GetObjectCommand,
-	PutObjectCommand,
-	S3Client,
-} from '@aws-sdk/client-s3'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { readFile } from 'fs/promises'
 import { Ulid } from 'id128'
 import * as path from 'path'
+import { requestLabels } from './utils/requestDynamoDB'
+import { requestImage } from './utils/requestS3'
 import { retry } from './utils/retry'
 
 const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3' // TODO: get value from env
@@ -49,33 +43,6 @@ const uploadImage = async ({
 	)
 }
 
-// Request image
-const requestImage = async (Key: string, Bucket: string) => {
-	try {
-		return await s3.send(
-			new GetObjectCommand({
-				Bucket,
-				Key,
-			}),
-		)
-	} catch (err: any) {
-		throw new Error(`Failed to fetch image from ${Key} in ${Bucket}`)
-	}
-}
-
-const requestLabels = async (TableName: string, Key: string) => {
-	try {
-		return await ddbClient.send(
-			new GetItemCommand({
-				TableName,
-				Key: { image: { S: Key } },
-			}),
-		)
-	} catch (err: any) {
-		throw new Error(`Failed to fetch labels`)
-	}
-}
-
 const includeKeyword = (labels: GetItemCommandOutput, keyword: string) =>
 	Object.values(labels.Item ?? {})
 		.map((label) => label.S)
@@ -92,12 +59,12 @@ const main = async () => {
 	})
 	// const thumb =
 	await retry(
-		async () => requestImage(key, resizedBucket),
+		async () => requestImage(s3, key, resizedBucket),
 		'check generated thumb',
 	)
 	// TODO: validate generated thumb is smaller than original image and if thumb is an image
 	const labels = await retry(
-		async () => requestLabels(TableName, key),
+		async () => requestLabels(ddbClient, TableName, key),
 		'check generated labels',
 	)
 	if (!includeKeyword(labels, keyword))
