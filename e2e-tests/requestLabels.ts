@@ -3,8 +3,8 @@ import { stackOutput } from '@nordicsemiconductor/cloudformation-helpers'
 import { StackOutputs } from 'cdk/stacks/image-gallery'
 import { assertThat, is } from 'hamjest'
 import { stackNamePrefix } from '../cdk/stackName.js'
-import { apiGatewayClient } from './apiGatewayClient'
-import { getCognitoUserCredentials } from './getCognitoUserCredentials'
+import { apiGatewayClient } from './utils/apiGatewayClient'
+import { getCognitoUserCredentials } from './utils/getCognitoUserCredentials'
 
 const main = async () => {
 	const outputs = await stackOutput(new CloudFormationClient({}))<StackOutputs>(
