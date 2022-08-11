@@ -4,7 +4,6 @@ export const retry = async <R>(
 	fn: () => Promise<R>,
 	action: string,
 ): Promise<R> => {
-	console.log(`-- Action: ${action} --`)
 	return new Promise<R>((resolve, reject) => {
 		const fibonacciBackoff = backoff.exponential({
 			randomisationFactor: 0,
@@ -13,7 +12,9 @@ export const retry = async <R>(
 		})
 
 		fibonacciBackoff.on('backoff', (number, delay) => {
-			console.log(`Try # ${number}. Time: ${delay} ms`)
+			console.log(
+				`-- Action: '${action}'. Try # ${number}. Time: ${delay} ms --`,
+			)
 		})
 
 		fibonacciBackoff.failAfter(6)
@@ -22,6 +23,7 @@ export const retry = async <R>(
 			try {
 				const res = await fn()
 				resolve(res)
+				console.log(`-- Action: '${action}' completed successfully --`)
 			} catch (err) {
 				console.error(err)
 				fibonacciBackoff.backoff()
