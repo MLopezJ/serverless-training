@@ -32,9 +32,6 @@ const main = async () => {
 		}),
 	)
 
-	console.log(`${response.status} ${response.statusText}`)
-	console.log(await response.text())
-
 	assertThat(response.status, is(404))
 }
 
