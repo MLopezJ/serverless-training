@@ -53,11 +53,16 @@ const main = async () => {
 	console.log({ key })
 	const image = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
-	await uploadImage({
-		location: image,
-		Key: key,
-		Bucket: bucket,
-	})
+	await retry(
+		async () =>
+			await uploadImage({
+				location: image,
+				Key: key,
+				Bucket: bucket,
+			}),
+		'Upload image',
+	)
+
 	// const thumb =
 	await retry(
 		async () => requestImage(s3, key, resizedBucket),
