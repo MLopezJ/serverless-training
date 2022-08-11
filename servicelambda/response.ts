@@ -5,7 +5,7 @@ export const response = (
 	body = '',
 	headers?: Record<string, string>,
 ): APIGatewayProxyResultV2 => {
-	const response: APIGatewayProxyResultV2 = {
+	return {
 		statusCode,
 		headers: {
 			'content-type': 'text/plain; utf-8',
@@ -13,6 +13,4 @@ export const response = (
 		},
 		body,
 	}
-	console.log({ response })
-	return response
 }

@@ -13,8 +13,6 @@ export const serviceHandler =
 		},
 	) =>
 	async (event: APIGatewayEvent): Promise<APIGatewayProxyResultV2> => {
-		console.debug(JSON.stringify({ event }))
-
 		const { action, key } = event.queryStringParameters ?? {}
 		if (action === undefined || key === undefined) {
 			console.debug('no info provided')
@@ -24,13 +22,6 @@ export const serviceHandler =
 		if (action === 'getLabels' && key !== undefined) {
 			// requesting labels associate to image
 			const result = await getLabels(key)
-			console.debug(
-				JSON.stringify({
-					action,
-					key,
-					result,
-				}),
-			)
 
 			if (result.Item === undefined) {
 				console.debug(`No labels related to ${key}`)
