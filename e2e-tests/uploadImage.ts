@@ -24,6 +24,10 @@ export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
 
+/**
+ * Upload image to app, make sure a thumb image is created and labels related to image description are created as well.
+ * */
+
 // upload image to AWS S3
 const uploadImage = async ({
 	location,
