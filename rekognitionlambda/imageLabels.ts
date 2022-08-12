@@ -65,7 +65,7 @@ export const imageLabels =
 				TableName,
 				Item: {
 					...labels,
-					image: { S: imageKey },
+					image: { S: photo },
 				},
 			}),
 		)
