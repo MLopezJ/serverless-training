@@ -71,7 +71,7 @@ describe('imageLabels', () => {
 				input: {
 					Item: {
 						image: {
-							S: imageKey,
+							S: photo,
 						},
 						...spectedLabelsFormat,
 					},
