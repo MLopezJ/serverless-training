@@ -12,7 +12,7 @@ import { retry } from './utils/retry'
 
 const bucket = process.env.BUCKET ?? ''
 const resizedBucket = process.env.RESIZED_BUCKET ?? ''
-const key = `private/${process.env.AWS_ACCESS_KEY_ID ?? 'eu-west-1'}:${
+const key = `private/${process.env.AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
 	process.env.BUCKET_KEY ?? ''
 }/photos/img-${Ulid.generate().toCanonical()}.png` // TODO: make it simpler
 const TableName = process.env.TABLE_NAME ?? ''
