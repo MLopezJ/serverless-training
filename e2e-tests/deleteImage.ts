@@ -17,12 +17,9 @@ import { retry } from './utils/retry.js'
 const main = async () => {
 	const ddbClient = new DynamoDBClient({})
 	const s3 = new S3Client({})
-	const TableName =
-		'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF' // TODO: get value from env
-	const bucket =
-		'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3' // TODO: get value from env
-	const resizedBucket =
-		'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9' // TODO: get value from env
+	const bucket = process.env.BUCKET ?? ''
+	const resizedBucket = process.env.RESIZED_BUCKET ?? ''
+	const TableName = process.env.TABLE_NAME ?? ''
 	const outputs = await stackOutput(new CloudFormationClient({}))<StackOutputs>(
 		`${stackNamePrefix}Stack`,
 	)

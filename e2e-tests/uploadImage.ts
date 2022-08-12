@@ -10,12 +10,12 @@ import { requestLabels } from './utils/requestDynamoDB'
 import { requestImage } from './utils/requestS3'
 import { retry } from './utils/retry'
 
-const bucket = 'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3' // TODO: get value from env
-const resizedBucket =
-	'dev-awsserverlesstrainin-cdkserverlesstrainingimg-15ti38q4m09x9' // TODO: get value from env
-const key = `private/eu-west-1:78ad3dad-3394-47fe-867a-2a0ddf50ba3d/photos/img-${Ulid.generate().toCanonical()}.png` // TODO: make it simpler
-const TableName =
-	'dev-AwsServerlessTrainingStack-dev-ImageLabelsE524135D-1M25SW87XMWZF' // TODO: get value from env
+const bucket = process.env.BUCKET ?? ''
+const resizedBucket = process.env.RESIZED_BUCKET ?? ''
+const key = `private/${process.env.AWS_ACCESS_KEY_ID ?? 'eu-west-1'}:${
+	process.env.BUCKET_KEY ?? ''
+}/photos/img-${Ulid.generate().toCanonical()}.png` // TODO: make it simpler
+const TableName = process.env.TABLE_NAME ?? ''
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
