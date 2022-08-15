@@ -12,9 +12,6 @@ import { retry } from './utils/retry'
 
 const bucket = process.env.BUCKET ?? ''
 const resizedBucket = process.env.RESIZED_BUCKET ?? ''
-const key = `private/${process.env.AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
-	process.env.BUCKET_KEY ?? ''
-}/photos/img-${Ulid.generate().toCanonical()}.png` // TODO: make it simpler
 const TableName = process.env.TABLE_NAME ?? ''
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
@@ -45,8 +42,11 @@ const uploadImage = async ({
 	)
 }
 
-const main = async () => {
-	console.log('-- Start --')
+export const main = async (): Promise<string> => {
+	console.log('-- Start Upload Image --')
+	const key = `private/${process.env.AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
+		process.env.BUCKET_KEY ?? ''
+	}/photos/img-${Ulid.generate().toCanonical()}.png`
 	console.log({ key })
 	const image = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
@@ -73,7 +73,7 @@ const main = async () => {
 
 	assertThat(includeKeyword(labels, keyword), is(true))
 
-	console.log('-- Finish --')
-}
+	console.log('-- Finish Upload Image --')
 
-main().then(console.log).catch(console.error)
+	return key
+}
