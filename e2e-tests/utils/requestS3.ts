@@ -13,6 +13,8 @@ export const requestImage = async (
 			}),
 		)
 	} catch (err: any) {
-		throw new Error(`Failed to fetch image from ${Key} in ${Bucket}`)
+		throw new Error(
+			`{"message":"Failed to fetch image from ${Key} in ${Bucket}", "code":"${err.Code}"}`,
+		)
 	}
 }
