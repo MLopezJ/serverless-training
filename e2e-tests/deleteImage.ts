@@ -14,11 +14,13 @@ import { requestLabels } from './utils/requestDynamoDB.js'
 import { requestImage } from './utils/requestS3.js'
 import { retry } from './utils/retry.js'
 
-const main = async () => {
+export const main = async (key: string): Promise<void> => {
+	console.log('-- Start Delete Image --')
 	const ddbClient = new DynamoDBClient({})
 	const s3 = new S3Client({})
 	const bucket = process.env.BUCKET ?? ''
 	const resizedBucket = process.env.RESIZED_BUCKET ?? ''
+
 	const TableName = process.env.TABLE_NAME ?? ''
 	const outputs = await stackOutput(new CloudFormationClient({}))<StackOutputs>(
 		`${stackNamePrefix}Stack`,
@@ -34,15 +36,16 @@ const main = async () => {
 	const endpoint = new URL(outputs.apiUrl)
 	const authenticatedClient = apiGatewayClient(endpoint, credentials.IdToken)
 
-	const filename = 'shark.jpg'
-	const key = `private/${credentials.IdentityId}/photos/${filename}`
-
-	const deleteImageAction = await authenticatedClient(
-		'images',
-		new URLSearchParams({
-			key,
-			action: 'deleteImage',
-		}),
+	const deleteImageAction = await retry(
+		async () =>
+			authenticatedClient(
+				'images',
+				new URLSearchParams({
+					key,
+					action: 'deleteImage',
+				}),
+			),
+		'Delete Image',
 	)
 
 	assertThat(deleteImageAction.status, is(202))
@@ -54,19 +57,21 @@ const main = async () => {
 	)
 	assertThat(labels.Item, is(undefined))
 
-	// check s3
-	const requestBucket = await retry(
-		async () => requestImage(s3, key, bucket),
-		'Check deleted image',
-	)
-	assertThat(requestBucket.Item, is(undefined))
+	// check bucket
+	await requestImage(s3, key, bucket)
+		.then()
+		.catch((err) => {
+			const { code } = JSON.parse(err.message)
+			assertThat(code, is('NoSuchKey'))
+		})
 
-	// check s3 resized
-	const requestResizedBucket = await retry(
-		async () => requestImage(s3, key, resizedBucket),
-		'Check deleted thumb',
-	)
-	assertThat(requestResizedBucket.Item, is(undefined))
+	// check resized bucket
+	await requestImage(s3, key, resizedBucket)
+		.then()
+		.catch((err) => {
+			const { code } = JSON.parse(err.message)
+			assertThat(code, is('NoSuchKey'))
+		})
+
+	console.log('-- Finish Delete Image --')
 }
-
-main().then(console.log).catch(console.error)
