@@ -97,7 +97,9 @@ describe('serviceHandler', () => {
 			},
 		} as any
 
-		const getLabels = jest.fn().mockImplementation(() => undefined)
+		const getLabels = jest.fn().mockImplementation(() => {
+			return { Item: undefined }
+		})
 		const deleteImage = jest.fn()
 		const handler = await serviceHandler({ getLabels, deleteImage })(event)
 		expect(handler).toStrictEqual(response(404, `No labels related to ${key}`))
