@@ -29,7 +29,9 @@ describe('serviceHandler', () => {
 			},
 		} as any
 
-		const getLabels = jest.fn()
+		const getLabels = jest.fn().mockImplementation(() => {
+			return { Item: '' }
+		})
 		const deleteImage = jest.fn()
 		await serviceHandler({ getLabels, deleteImage })(event)
 		expect(getLabels).toBeCalledWith(key)
@@ -81,10 +83,12 @@ describe('serviceHandler', () => {
 			},
 		} as any
 
-		const getLabels = jest.fn().mockImplementation(() => ['animal', 'cat'])
+		const getLabels = jest.fn().mockImplementation(() => {
+			return { Item: ['animal', 'cat'] }
+		})
 		const deleteImage = jest.fn()
 		const handler = await serviceHandler({ getLabels, deleteImage })(event)
-		expect(handler).toStrictEqual(response(200, '["animal","cat"]'))
+		expect(handler).toStrictEqual(response(200, `{"Item":["animal","cat"]}`))
 	})
 
 	it('Should return status code 404 if labels are not returned', async () => {
