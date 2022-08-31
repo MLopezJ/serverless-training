@@ -16,14 +16,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set enviroment variables
+        run: |
+          echo AWS_DEFAULT_REGION
+          echo ${{ secrets.AWS_DEFAULT_REGION }}
+
       - name: Run end-to-end tests
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET: ${{ secrets.BUCKET }}
-          BUCKET_KEY: ${{ secrets.BUCKET_KEY }}
-          RESIZED_BUCKET: ${{ secrets.RESIZED_BUCKET }}
-          TABLE_NAME: ${{ secrets.TABLE_NAME }}
         run: npx tsx e2e-tests/index.ts
