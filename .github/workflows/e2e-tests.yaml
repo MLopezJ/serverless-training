@@ -3,7 +3,7 @@ name: End-to-end tests
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_DEFAULT_REGION: eu-west-1
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   BUCKET: ${{ secrets.BUCKET }}
   BUCKET_KEY: ${{ secrets.BUCKET_KEY }}
@@ -23,7 +23,7 @@ jobs:
       - name: "Say Hello Mona it's Monday"
         run:
           echo "$Greeting $First_Name. Today is $DAY_OF_WEEK! $BUCKET
-          $TABLE_NAME"
+          $TABLE_NAME $AWS_DEFAULT_REGION"
         env:
           First_Name: Mona
   tests:
