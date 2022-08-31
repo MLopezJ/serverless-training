@@ -16,6 +16,7 @@ on:
 
 jobs:
   greeting_job:
+    runs-on: ubuntu-latest
     env:
       Greeting: Hello
     steps:
