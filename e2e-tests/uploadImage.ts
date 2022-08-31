@@ -48,12 +48,12 @@ export const main = async (): Promise<string> => {
 		process.env.BUCKET_KEY ?? ''
 	}/photos/img-${Ulid.generate().toCanonical()}.png`
 	console.log({ key })
-	const image = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
+	const imageLocation = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
 	await retry(
 		async () =>
 			await uploadImage({
-				location: image,
+				location: imageLocation,
 				Key: key,
 				Bucket: bucket,
 			}),
