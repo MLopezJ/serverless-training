@@ -7,7 +7,6 @@ jobs:
   check_env_var:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_DEFAULT_REGION: eu-west-1
@@ -19,7 +18,7 @@ jobs:
     steps:
       - name: "echo env vars"
         run: |
-          echo " Here -> ${{GITHUB_TOKEN}} ${{BUCKET}} ${{TABLE_NAME}}" 
+          echo " Here -> ${{BUCKET}} ${{TABLE_NAME}}" 
           echo "Here -> ${{AWS_DEFAULT_REGION"
           echo "The job_id is $GITHUB_JOB"
           echo "The id of this action is $GITHUB_ACTION"
