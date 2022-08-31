@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: "echo env vars"
         run: |
-          echo " Here -> ${{BUCKET}} ${{TABLE_NAME}}" 
-          echo "Here -> ${{AWS_DEFAULT_REGION"
+          echo " Here -> ${{secrets.BUCKET}} ${{secrets.TABLE_NAME}}" 
+          echo "Here -> ${{secrets.AWS_DEFAULT_REGION}"
           echo "The job_id is $GITHUB_JOB"
           echo "The id of this action is $GITHUB_ACTION"
           echo "The run id is $GITHUB_RUN_ID"
