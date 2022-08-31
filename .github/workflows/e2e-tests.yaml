@@ -16,14 +16,15 @@ jobs:
       RESIZED_BUCKET: ${{ secrets.RESIZED_BUCKET }}
       TABLE_NAME: ${{ secrets.TABLE_NAME }}
     steps:
-      - name: "echo env vars"
-        run: echo "Here -> ${{secrets.BUCKET}}"
+      - name: "0"
+        run: echo "BUCKET -> ${{secrets.BUCKET}}"
       - name: "1"
-        run: echo "${{secrets.TABLE_NAME}}"
+        run: echo "TABLE_NAME -> ${{secrets.TABLE_NAME}}"
       - name: "2"
-        run: echo "Here -> ${{secrets.AWS_DEFAULT_REGION}}"
+        run:
+          echo "AWS_DEFAULT_REGION -> Here -> ${{secrets.AWS_DEFAULT_REGION}}"
       - name: "3"
-        run: echo "The job_id is $GITHUB_JOB"
+        run: echo "GITHUB_JOB -> The job_id is $GITHUB_JOB"
       - name: "4"
         run: echo "The id of this action is $GITHUB_ACTION"
       - name: "5"
