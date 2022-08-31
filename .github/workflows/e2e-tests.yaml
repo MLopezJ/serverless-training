@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: check github context
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Test enviroment variables
         run: |
           echo AWS_DEFAULT_REGION
