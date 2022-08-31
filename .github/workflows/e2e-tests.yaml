@@ -17,6 +17,8 @@ jobs:
         run: npm ci
 
       - name: Set enviroment variables
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
           echo AWS_DEFAULT_REGION
           echo ${{ secrets.AWS_DEFAULT_REGION }}
