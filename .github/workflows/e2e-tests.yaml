@@ -3,17 +3,26 @@ name: End-to-end tests
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_DEFAULT_REGION: eu-west-1
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   BUCKET: ${{ secrets.BUCKET }}
   BUCKET_KEY: ${{ secrets.BUCKET_KEY }}
   RESIZED_BUCKET: ${{ secrets.RESIZED_BUCKET }}
   TABLE_NAME: ${{ secrets.TABLE_NAME }}
+  DAY_OF_WEEK: Monday
 
 on:
   push:
 
 jobs:
+  greeting_job:
+    env:
+      Greeting: Hello
+    steps:
+      - name: "Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: Mona
   tests:
     runs-on: ubuntu-latest
     steps:
