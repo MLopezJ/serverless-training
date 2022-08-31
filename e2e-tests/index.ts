@@ -7,4 +7,5 @@ const execution = async () => {
 	await deleteImage(key)
 }
 
-execution().then(console.log).catch(console.log)
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+execution()
