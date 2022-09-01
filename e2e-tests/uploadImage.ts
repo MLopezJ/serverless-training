@@ -2,7 +2,7 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { readFile } from 'fs/promises'
-import { assertThat, is } from 'hamjest'
+import { assertThat, is, lessThan } from 'hamjest'
 import { Ulid } from 'id128'
 import * as path from 'path'
 import { streamToBuffer } from 'rekognitionlambda/streamToBuffer'
@@ -53,7 +53,7 @@ const checkThumbSize = async (key: string, originalImgLocation: string) => {
 	const originalImg = await readFile(originalImgLocation)
 	const originalImgSize = Buffer.byteLength(originalImg)
 
-	if (thumbSize >= originalImgSize) throw new Error()
+	assertThat(thumbSize, is(lessThan(originalImgSize)))
 }
 
 export const main = async (): Promise<string> => {
