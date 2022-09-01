@@ -15,7 +15,7 @@ env:
   TEST: ${{ secrets.TEST }}
 
 jobs:
-  vars:
+  tests-vars:
     runs-on: ubuntu-latest
 
     steps:
