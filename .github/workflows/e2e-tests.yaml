@@ -36,7 +36,7 @@ jobs:
 
       - name: Check region
         run: |
-          if ${{ secrets.AWS_DEFAULT_REGION }} == 'eu-west-1'
+          if [ ${{ secrets.AWS_DEFAULT_REGION }} == 'eu-west-1' ] ; then
             echo ${{ secrets.AWS_DEFAULT_REGION }}
           fi
 
