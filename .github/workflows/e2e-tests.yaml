@@ -40,5 +40,11 @@ jobs:
             echo " region is eu-west-1"
           fi
 
+      - name: Check validation region is working
+        run: |
+          if [ ${{ secrets.AWS_DEFAULT_REGION }} == 'mauro' ] ; then
+            echo " region is mauro"
+          fi
+
       - name: Run end-to-end tests
         run: npx tsx e2e-tests/index.ts
