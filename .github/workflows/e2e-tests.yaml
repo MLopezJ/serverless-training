@@ -34,10 +34,16 @@ jobs:
           echo AWS_DEFAULT_REGION
           echo ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Check region
+      - name: Check AWS_DEFAULT_REGION
         run: |
           if [ ${{ secrets.AWS_DEFAULT_REGION }} == 'eu-west-1' ] ; then
-            echo " region is eu-west-1"
+            echo " AWS_DEFAULT_REGION is eu-west-1"
+          fi
+
+      - name: Check AWS_REGION
+        run: |
+          if [ ${{ secrets.AWS_REGION }} == 'eu-west-1' ] ; then
+            echo " AWS_REGION is eu-west-1"
           fi
 
       - name: Check validation region is working
