@@ -74,12 +74,11 @@ export const main = async (): Promise<string> => {
 		'Upload image',
 	)
 
-	// const thumb =
 	await retry(
 		async () => checkThumbSize(key, imageLocation),
 		'Check generated thumb size',
 	)
-	// TODO: validate generated thumb is smaller than original image and if thumb is an image
+
 	const labels = await retry(
 		async () => requestLabels(ddbClient, TableName, key),
 		'Check generated labels',
