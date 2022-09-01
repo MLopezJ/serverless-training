@@ -5,6 +5,8 @@ import { readFile } from 'fs/promises'
 import { assertThat, is } from 'hamjest'
 import { Ulid } from 'id128'
 import * as path from 'path'
+import { streamToBuffer } from 'rekognitionlambda/streamToBuffer'
+import { Readable } from 'stream'
 import { includeKeyword } from './utils/includeKeyword'
 import { requestLabels } from './utils/requestDynamoDB'
 import { requestImage } from './utils/requestS3'
@@ -42,6 +44,18 @@ const uploadImage = async ({
 	)
 }
 
+const checkThumbSize = async (key: string, originalImgLocation: string) => {
+	const thumb = await requestImage(s3, key, resizedBucket)
+	const thumbStream = thumb.Body as Readable
+	const thumBuffer = await streamToBuffer(thumbStream)
+	const thumbSize = Buffer.byteLength(thumBuffer)
+
+	const originalImg = await readFile(originalImgLocation)
+	const originalImgSize = Buffer.byteLength(originalImg)
+
+	if (thumbSize >= originalImgSize) throw new Error()
+}
+
 export const main = async (): Promise<string> => {
 	console.log('-- Start Upload Image --')
 	const key = `private/${process.env.AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
@@ -62,8 +76,8 @@ export const main = async (): Promise<string> => {
 
 	// const thumb =
 	await retry(
-		async () => requestImage(s3, key, resizedBucket),
-		'Check generated thumb',
+		async () => checkThumbSize(key, imageLocation),
+		'Check generated thumb size',
 	)
 	// TODO: validate generated thumb is smaller than original image and if thumb is an image
 	const labels = await retry(
