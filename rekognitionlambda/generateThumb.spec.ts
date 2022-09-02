@@ -7,8 +7,8 @@ describe('generateThumb', () => {
 	const bufferMock = Buffer.from('imageThumbnail')
 	const bucket =
 		'dev-awsserverlesstrainin-cdkserverlesstrainingimg-10j2jragqzpe3'
-	const imageKey = 'private/eu-west-1/photos/coffee-espresso.png'
-	const photo = 'private/eu-west-1/photos/coffee-espresso.png'
+	const imageKey = 'private/photos/coffee-espresso.png'
+	const photo = 'private/photos/coffee-espresso.png'
 
 	it('Should download image freom AWS S3', async () => {
 		const s3: S3Client = {
