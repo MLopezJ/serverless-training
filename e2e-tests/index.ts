@@ -8,14 +8,12 @@ import { main as uploadImage } from './uploadImage'
 
 const execution = async () => {
 	const AWS_DEFAULT_REGION = process.env.AWS_DEFAULT_REGION ?? ''
-	// TODO: set  bucket key by the output object
-	const BUCKET_KEY = process.env.BUCKET_KEY ?? ''
 
 	const outputs: StackOutputs = await stackOutput(
 		new CloudFormationClient({}),
 	)<StackOutputs>(`${stackNamePrefix}Stack`)
 
-	const key = await uploadImage(AWS_DEFAULT_REGION, BUCKET_KEY, outputs)
+	const key = await uploadImage(AWS_DEFAULT_REGION, outputs)
 	await requestLabels(key, outputs)
 	await deleteImage(key, outputs)
 }

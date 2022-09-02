@@ -60,14 +60,13 @@ const checkThumbSize = async (
 
 export const main = async (
 	AWS_DEFAULT_REGION: string,
-	BUCKET_KEY: string,
 	outputs: StackOutputs,
 ): Promise<string> => {
 	console.log('-- Start Upload Image --')
 
-	const key = `private/${AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
-		BUCKET_KEY ?? ''
-	}/photos/img-${Ulid.generate().toCanonical()}.png`
+	const key = `private/${
+		AWS_DEFAULT_REGION ?? 'eu-west-1'
+	}:/photos/img-${Ulid.generate().toCanonical()}.png`
 	console.log({ key })
 	const imageLocation = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
