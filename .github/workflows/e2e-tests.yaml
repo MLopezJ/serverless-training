@@ -46,7 +46,7 @@ jobs:
 
       - name: Deploy test stack
         run: |
-          npx cdk deploy --context stackName=${{ env.STACK_NAME }} --require-approval never
+          npx cdk deploy ${{ secrets.GENERIC_STACK_NAME }} --context stackName=${{ env.STACK_NAME }} --require-approval never
 
       - name: List stacks
         run: npx cdk list
