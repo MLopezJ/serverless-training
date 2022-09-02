@@ -6,6 +6,7 @@ export const requestImage = async (
 	Bucket: string,
 ): Promise<any> => {
 	try {
+		console.log({ Bucket, Key })
 		return await s3.send(
 			new GetObjectCommand({
 				Bucket,
