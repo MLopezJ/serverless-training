@@ -38,15 +38,9 @@ jobs:
         run: |
           npx cdk bootstrap aws://`aws sts get-caller-identity | jq -r '.Account' | tr -d '\n'`/${{ secrets.AWS_REGION }}
 
-      - name: List stacks
-        run: npx cdk list
-
       - name: Deploy test stack
         run: |
           npx cdk deploy ${{ env.STACK_NAME_PREFIX }}Stack --require-approval never
-
-      - name: List stacks
-        run: npx cdk list
 
       - name: Run end-to-end tests
         run: npx tsx e2e-tests/index.ts
