@@ -14,7 +14,11 @@ const app = new cdk.App({
 })
 
 const stackName = app.node.tryGetContext('stackName')
-new ImageGalleryStack(app, `${stackNamePrefix}Stack`, { stackName: stackName })
+const stackProps =
+	app.node.tryGetContext('stackName') !== undefined
+		? { stackName: stackName }
+		: {}
+new ImageGalleryStack(app, `${stackNamePrefix}Stack`, stackProps)
 
 new ContinuousDeploymentPipelineStack(
 	app,
