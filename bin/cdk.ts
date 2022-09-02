@@ -13,10 +13,9 @@ const app = new cdk.App({
 	},
 })
 
-const stackName = app.node.tryGetContext('stackName')
 const stackProps =
 	app.node.tryGetContext('stackName') !== undefined
-		? { stackName: stackName }
+		? { stackName: app.node.tryGetContext('stackName') }
 		: {}
 new ImageGalleryStack(app, `${stackNamePrefix}Stack`, stackProps)
 
