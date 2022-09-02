@@ -1,20 +1,17 @@
-import { CloudFormationClient } from '@aws-sdk/client-cloudformation'
 import { GetItemCommandOutput } from '@aws-sdk/client-dynamodb'
-import { stackOutput } from '@nordicsemiconductor/cloudformation-helpers'
 import { StackOutputs } from 'cdk/stacks/image-gallery'
 import { assertThat, is } from 'hamjest'
-import { stackNamePrefix } from '../cdk/stackName.js'
 import { apiGatewayClient } from './utils/apiGatewayClient'
 import { getCognitoUserCredentials } from './utils/getCognitoUserCredentials'
 import { includeKeyword } from './utils/includeKeyword.js'
 import { retry } from './utils/retry.js'
 
-export const main = async (key: string): Promise<void> => {
+export const main = async (
+	key: string,
+	outputs: StackOutputs,
+): Promise<void> => {
 	console.log('-- Start Request Labels --')
 	const keyword = 'Shark'
-	const outputs = await stackOutput(new CloudFormationClient({}))<StackOutputs>(
-		`${stackNamePrefix}Stack`,
-	)
 
 	const credentials = await getCognitoUserCredentials({
 		userPoolId: outputs.UserPoolId,
