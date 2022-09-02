@@ -66,7 +66,7 @@ export const main = async (
 
 	const key = `private/${
 		AWS_DEFAULT_REGION ?? 'eu-west-1'
-	}:/photos/img-${Ulid.generate().toCanonical()}.png`
+	}/photos/img-${Ulid.generate().toCanonical()}.png`
 	console.log({ key })
 	const imageLocation = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
 	const keyword = 'Shark'
