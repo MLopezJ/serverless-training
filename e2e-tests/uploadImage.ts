@@ -1,6 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { RekognitionClient } from '@aws-sdk/client-rekognition'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { StackOutputs } from 'cdk/stacks/image-gallery'
 import { readFile } from 'fs/promises'
 import { assertThat, is, lessThan } from 'hamjest'
 import { Ulid } from 'id128'
@@ -12,9 +13,6 @@ import { requestLabels } from './utils/requestDynamoDB'
 import { requestImage } from './utils/requestS3'
 import { retry } from './utils/retry'
 
-const bucket = process.env.BUCKET ?? ''
-const resizedBucket = process.env.RESIZED_BUCKET ?? ''
-const TableName = process.env.TABLE_NAME ?? ''
 export const rekogClient = new RekognitionClient({})
 export const ddbClient = new DynamoDBClient({})
 const s3 = new S3Client({})
@@ -44,8 +42,12 @@ const uploadImage = async ({
 	)
 }
 
-const checkThumbSize = async (key: string, originalImgLocation: string) => {
-	const thumb = await requestImage(s3, key, resizedBucket)
+const checkThumbSize = async (
+	key: string,
+	originalImgLocation: string,
+	RESIZED_BUCKET: string,
+) => {
+	const thumb = await requestImage(s3, key, RESIZED_BUCKET)
 	const thumbStream = thumb.Body as Readable
 	const thumBuffer = await streamToBuffer(thumbStream)
 	const thumbSize = Buffer.byteLength(thumBuffer)
@@ -56,31 +58,38 @@ const checkThumbSize = async (key: string, originalImgLocation: string) => {
 	assertThat(thumbSize, is(lessThan(originalImgSize)))
 }
 
-export const main = async (): Promise<string> => {
+export const main = async (
+	AWS_DEFAULT_REGION: string,
+	outputs: StackOutputs,
+): Promise<string> => {
 	console.log('-- Start Upload Image --')
-	const key = `private/${process.env.AWS_DEFAULT_REGION ?? 'eu-west-1'}:${
-		process.env.BUCKET_KEY ?? ''
-	}/photos/img-${Ulid.generate().toCanonical()}.png`
+
+	/*
+	const key = `private/${
+		AWS_DEFAULT_REGION ?? 'eu-west-1'
+	}/photos/img-${Ulid.generate().toCanonical()}.png` */
+	const key = `private/something/photos/img-${Ulid.generate().toCanonical()}.png`
 	console.log({ key })
 	const imageLocation = path.join(process.cwd(), './e2e-tests/utils/shark.jpg')
+	console.log({ imageLocation, outputs, AWS_DEFAULT_REGION })
 	const keyword = 'Shark'
 	await retry(
 		async () =>
 			await uploadImage({
 				location: imageLocation,
 				Key: key,
-				Bucket: bucket,
+				Bucket: outputs.imageBucket,
 			}),
 		'Upload image',
 	)
 
 	await retry(
-		async () => checkThumbSize(key, imageLocation),
+		async () => checkThumbSize(key, imageLocation, outputs.resizedBucket),
 		'Check generated thumb size',
 	)
 
 	const labels = await retry(
-		async () => requestLabels(ddbClient, TableName, key),
+		async () => requestLabels(ddbClient, outputs.ddbTable, key),
 		'Check generated labels',
 	)
 
